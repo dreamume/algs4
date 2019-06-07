@@ -120,8 +120,7 @@ int main(int args, char* argv[]) {
   // print results
   printf(" job   start  finish\n");
   printf("--------------------\n");
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++)
 	printf("%4d %7.1f %7.1f\n", i, lp.distTo(i), lp.distTo(i+n));
-  }
   printf("Finish time: %7.1f\n", lp.distTo(sink));
 }
