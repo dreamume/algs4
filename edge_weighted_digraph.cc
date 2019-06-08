@@ -132,13 +132,13 @@ EdgeWeightedDigraph::EdgeWeightedDigraph(fstream& in): _gen(_rd()) {
  *
  * @param  G the edge-weighted digraph to copy
  */
-EdgeWeightedDigraph::EdgeWeightedDigraph(const EdgeWeightedDigraph& G): EdgeWeightedDigraph(G.V()) {
+EdgeWeightedDigraph::EdgeWeightedDigraph(const EdgeWeightedDigraph& G): 
+  EdgeWeightedDigraph(G.V()) {
   _E = G.E();
   for (int v = 0; v < G.V(); v++)
 	_indegree[v] = G.indegree(v);
-  for (int v = 0; v < G.V(); v++) {
+  for (int v = 0; v < G.V(); v++)
 	_adj[v] = G.adj(v);
-  }
 }
 
   // throw an IllegalArgumentException unless {@code 0 <= v < V}

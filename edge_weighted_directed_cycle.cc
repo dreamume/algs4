@@ -60,7 +60,7 @@ EdgeWeightedDirectedCycle::EdgeWeightedDirectedCycle(const EdgeWeightedDigraph& 
 	if (!_marked[v]) dfs(G, v);
 
   // check that digraph has a cycle
-  assert(check());
+  //  assert(check());
 }
 
 // check that algorithm computes either the topological order or finds a directed cycle
@@ -70,17 +70,15 @@ void EdgeWeightedDirectedCycle::dfs(const EdgeWeightedDigraph& G, int v) {
     for (DirectedEdge* e : G.adj(v)) {
         int w = e->to();
 
-        // short circuit if directed cycle found
-        if (!_cycle.empty()) return;
-
-        // found new vertex, so recur
-        else if (!_marked[w]) {
+        if (!_cycle.empty()) {
+		  // short circuit if directed cycle found
+		  return;
+		} else if (!_marked[w]) {
+		  // found new vertex, so recur
             _edge_to[w] = e;
             dfs(G, w);
-        }
-
-        // trace back directed cycle
-        else if (_on_stack[w]) {
+        } else if (_on_stack[w]) {
+		  // trace back directed cycle
             DirectedEdge* f = e;
             while (f->from() != w) {
                 _cycle.push(f);
