@@ -1,6 +1,6 @@
 /******************************************************************************
- *  Compilation: clang++ -g -DDebug quick_find_uf.cc -std=c++11 -o quick_find_uf
- *  Execution:  quick_find_uf input.txt
+ *  Compilation: clang++ -g -DDebug quick_union_uf.cc -std=c++11 -o quick_union_uf
+ *  Execution:  quick_union_uf input.txt
  *  Dependencies: 
  *  Data files:   https://algs4.cs.princeton.edu/15uf/tinyUF.txt
  *                https://algs4.cs.princeton.edu/15uf/mediumUF.txt
@@ -11,7 +11,7 @@
  ******************************************************************************/
 
 /**
- *  The {@code QuickFindUF} class represents a <em>union–find data type</em>
+ *  The {@code QuickUnionUF} class represents a <em>union–find data type</em>
  *  (also known as the <em>disjoint-sets data type</em>).
  *  It supports the classic <em>union</em> and <em>find</em> operations,
  *  along with a <em>count</em> operation that returns the total number
@@ -40,27 +40,27 @@
  *  </ul>
  *  <p>
  *  The canonical element of a set can change only when the set
- *  itself changes during a call to <em>unionWith</em>&mdash;it cannot
+ *  itself changes during a call to <em>union</em>&mdash;it cannot
  *  change during a call to either <em>find</em> or <em>count</em>.
  *  <p>
- *  This implementation uses <em>quick find</em>.
- *  The constructor takes &Theta;(<em>n</em>) time, where <em>n</em>
- *  is the number of sites.
- *  The <em>find</em>, <em>connected</em>, and <em>count</em>
- *  operations take &Theta;(1) time; the <em>unionWith</em> operation
- *  takes &Theta;(<em>n</em>) time.
+ *  This implementation uses <em>quick union</em>.
+ *  The constructor takes &Theta;(<em>n</em>) time, where
+ *  <em>n</em> is the number of sites.
+ *  The <em>union</em> and <em>find</em> operations take
+ *  &Theta;(<em>n</em>) time in the worst case.
+ *  The <em>count</em> operation takes &Theta;(1) time.
  *  <p>
  *  For alternative implementations of the same API, see
  *  {@link UF}, {@link QuickUnionUF}, and {@link WeightedQuickUnionUF}.
- *  For additional documentation, see
- *  <a href="https://algs4.cs.princeton.edu/15uf">Section 1.5</a> of
+ *  For additional documentation,
+ *  see <a href="https://algs4.cs.princeton.edu/15uf">Section 1.5</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  *
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
 
-#include "quick_find_uf.h"
+#include "quick_union_uf.h"
 
 #include <exception>
 
@@ -75,22 +75,18 @@ using std::fstream;
 
 #endif
 
-void QuickFindUF::validate(int p) {
-  if (p < 0 || p >= _id.size())
+void QuickUnionUF::validate(int p) {
+  if (p < 0 || p >= _parent.size())
 	throw std::invalid_argument("invalid id index!");
 }
 
-void QuickFindUF::unionWith(int p, int q) {
-  validate(p);
-  validate(q);
-  int pID = _id[p];   // needed for correctness
-  int qID = _id[q];   // to reduce the number of array accesses
+void QuickUnionUF::unionWith(int p, int q) {
+  int root_p = find(p);
+  int root_q = find(q);
 
-  // p and q are already in the same component
-  if (pID == qID) return;
+  if (root_p == root_q) return;
 
-  for (int i = 0; i < _id.size(); i++)
-    if (_id[i] == pID) _id[i] = qID;
+   _parent[root_p] = root_q;
   _count--;
 }
 
@@ -115,7 +111,7 @@ int main(int args, char *argv[]) {
   std::getline(in, line);
   int n = stoi(line);
 
-  QuickFindUF uf(n);
+  QuickUnionUF uf(n);
   while (!in.eof()) {
     std::getline(in, line);
     std::stringstream ss(line);
