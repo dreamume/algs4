@@ -97,7 +97,8 @@ using std::string;
  */
 template <typename Key, typename Value>
 void RedBlackBST<Key, Value>::put(Key key, Value val) {
-  if (key == defaultValue<Key>()) throw std::invalid_argument("first argument to put() is null");
+  if (key == defaultValue<Key>()) 
+    throw std::invalid_argument("first argument to put() is null");
   if (val == defaultValue<Value>()) return;
 
   _root = put(_root, key, val);
@@ -107,7 +108,8 @@ void RedBlackBST<Key, Value>::put(Key key, Value val) {
 
 // insert the key-value pair in the subtree rooted at h
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::put(typename RedBlackBST<Key, Value>::Node* h, Key key, Value val) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::put(
+  typename RedBlackBST<Key, Value>::Node* h, Key key, Value val) {
   if (!h) return new Node(key, val, RED, 1);
 
   bool cmp = isLess(key, h->_key);
@@ -147,7 +149,8 @@ void RedBlackBST<Key, Value>::deleteMin() {
 
 // delete the key-value pair with the minimum key rooted at h
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteMin(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteMin(
+  typename RedBlackBST<Key, Value>::Node* h) {
   if (!h->_left) {
     delete h;
     return nullptr;
@@ -180,7 +183,8 @@ void RedBlackBST<Key, Value>::deleteMax() {
 
 // delete the key-value pair with the maximum key rooted at h
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteMax(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteMax(
+  typename RedBlackBST<Key, Value>::Node* h) {
   if (isRed(h->_left)) h = rotateRight(h);
 
   if (!h->_right) {
@@ -205,7 +209,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteMax(typen
  */
 template <typename Key, typename Value>
 void RedBlackBST<Key, Value>::deleteItem(Key key) {
-  if (key == defaultValue<Key>()) throw std::invalid_argument("argument to deleteItem() is null");
+  if (key == defaultValue<Key>()) 
+    throw std::invalid_argument("argument to deleteItem() is null");
   if (!contains(key)) return;
 
   // if both children of root are black, set root to red
@@ -219,7 +224,8 @@ void RedBlackBST<Key, Value>::deleteItem(Key key) {
 
 // delete the key-value pair with the given key rooted at h
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteItem(typename RedBlackBST<Key, Value>::Node* h, Key key) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteItem(
+  typename RedBlackBST<Key, Value>::Node* h, Key key) {
   // assert get(h, key) != null;
 
   if (isLess(key, h->_key)) {
@@ -256,7 +262,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::deleteItem(type
 
 // make a left-leaning link lean to the right
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateRight(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateRight(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // assert (h != null) && isRed(h.left);
   Node* x = h->_left;
   h->_left = x->_right;
@@ -271,7 +278,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateRight(typ
 
 // make a right-leaning link lean to the left
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateLeft(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateLeft(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // assert (h != null) && isRed(h.right);
   Node* x = h->_right;
   h->_right = x->_left;
@@ -286,7 +294,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::rotateLeft(type
 
 // flip the colors of a node and its two children
 template <typename Key, typename Value>
-void RedBlackBST<Key, Value>::flipColors(typename RedBlackBST<Key, Value>::Node* h) {
+void RedBlackBST<Key, Value>::flipColors(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // h must have opposite color of its two children
   // assert (h != null) && (h.left != null) && (h.right != null);
   // assert (!isRed(h) &&  isRed(h.left) &&  isRed(h.right))
@@ -299,7 +308,8 @@ void RedBlackBST<Key, Value>::flipColors(typename RedBlackBST<Key, Value>::Node*
 // Assuming that h is red and both h.left and h.left.left
 // are black, make h.left or one of its children red.
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedLeft(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedLeft(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // assert (h != null);
   // assert isRed(h) && !isRed(h.left) && !isRed(h.left.left);
 
@@ -315,7 +325,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedLeft(typ
 // Assuming that h is red and both h.right and h.right.left
 // are black, make h.right or one of its children red.
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedRight(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedRight(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // assert (h != null);
   // assert isRed(h) && !isRed(h.right) && !isRed(h.right.left);
   flipColors(h);
@@ -328,7 +339,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::moveRedRight(ty
 
 // restore red-black tree invariant
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::balance(typename RedBlackBST<Key, Value>::Node* h) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::balance(
+  typename RedBlackBST<Key, Value>::Node* h) {
   // assert (h != null);
 
   if (isRed(h->_right))                      h = rotateLeft(h);
@@ -351,7 +363,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::balance(typenam
  */
 template <typename Key, typename Value>
 Key RedBlackBST<Key, Value>::min() {
-  if (isEmpty()) throw std::invalid_argument("calls min() with empty symbol table");
+  if (isEmpty()) 
+    throw std::invalid_argument("calls min() with empty symbol table");
   return min(_root)->_key;
 } 
 
@@ -362,7 +375,8 @@ Key RedBlackBST<Key, Value>::min() {
  */
 template <typename Key, typename Value>
 Key RedBlackBST<Key, Value>::max() {
-  if (isEmpty()) throw std::invalid_argument("calls max() with empty symbol table");
+  if (isEmpty()) 
+    throw std::invalid_argument("calls max() with empty symbol table");
   return max(_root)->_key;
 } 
 
@@ -376,8 +390,10 @@ Key RedBlackBST<Key, Value>::max() {
  */
 template <typename Key, typename Value>
 Key RedBlackBST<Key, Value>::floor(Key key) {
-  if (key == defaultValue<Key>()) throw std::invalid_argument("argument to floor() is null");
-  if (isEmpty()) throw std::out_of_range("calls floor() with empty symbol table");
+  if (key == defaultValue<Key>()) 
+    throw std::invalid_argument("argument to floor() is null");
+  if (isEmpty()) 
+    throw std::out_of_range("calls floor() with empty symbol table");
   Node* x = floor(_root, key);
   if (!x) throw std::invalid_argument("argument to floor() is too small");
   else           return x->_key;
@@ -385,7 +401,8 @@ Key RedBlackBST<Key, Value>::floor(Key key) {
 
 // the largest key in the subtree rooted at x less than or equal to the given key
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::floor(typename RedBlackBST<Key, Value>::Node* x, Key key) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::floor(
+  typename RedBlackBST<Key, Value>::Node* x, Key key) {
   if (!x) return nullptr;
   bool cmp = isLess(key, x->_key);
   if (!cmp && !isLess(x->_key, key)) return x;
@@ -404,8 +421,10 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::floor(typename 
  */
 template <typename Key, typename Value>
 Key RedBlackBST<Key, Value>::ceiling(Key key) {
-  if (key == defaultValue<Key>()) throw std::invalid_argument("argument to ceiling() is null");
-  if (isEmpty()) throw std::out_of_range("calls ceiling() with empty symbol table");
+  if (key == defaultValue<Key>()) 
+    throw std::invalid_argument("argument to ceiling() is null");
+  if (isEmpty()) 
+    throw std::out_of_range("calls ceiling() with empty symbol table");
   Node* x = ceiling(_root, key);
   if (!x) throw std::invalid_argument("argument to ceiling() is too small");
   else           return x->_key;  
@@ -413,7 +432,8 @@ Key RedBlackBST<Key, Value>::ceiling(Key key) {
 
 // the smallest key in the subtree rooted at x greater than or equal to the given key
 template <typename Key, typename Value>
-typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::ceiling(typename RedBlackBST<Key, Value>::Node* x, Key key) {
+typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::ceiling(
+  typename RedBlackBST<Key, Value>::Node* x, Key key) {
   if (!x) return nullptr;
   bool cmp = isLess(key, x->_key);
   if (!cmp && !isLess(x->_key, key)) return x;
@@ -437,7 +457,8 @@ typename RedBlackBST<Key, Value>::Node* RedBlackBST<Key, Value>::ceiling(typenam
 template <typename Key, typename Value>
 Key RedBlackBST<Key, Value>::select(int rank) {
   if (rank < 0 || rank >= size())
-    throw std::invalid_argument("argument to select() is invalid: " + std::to_string(rank));
+    throw std::invalid_argument("argument to select() is invalid: " + 
+                                std::to_string(rank));
 
   return select(_root, rank);
 }
@@ -445,7 +466,9 @@ Key RedBlackBST<Key, Value>::select(int rank) {
 // Return key in BST rooted at x of given rank.
 // Precondition: rank is in legal range.
 template <typename Key, typename Value>
-Key RedBlackBST<Key, Value>::select(typename RedBlackBST<Key, Value>::Node* x, int rank) {
+Key RedBlackBST<Key, Value>::select(
+  typename RedBlackBST<Key, Value>::Node* x, 
+  int rank) {
   if (!x) return nullptr;
   int leftSize = size(x->_left);
   if      (leftSize > rank) return select(x->_left,  rank);
@@ -461,13 +484,15 @@ Key RedBlackBST<Key, Value>::select(typename RedBlackBST<Key, Value>::Node* x, i
  */
 template <typename Key, typename Value>
 int RedBlackBST<Key, Value>::rank(Key key) {
-  if (key == defaultValue<Key>()) throw std::invalid_argument("argument to rank() is null");
+  if (key == defaultValue<Key>()) 
+    throw std::invalid_argument("argument to rank() is null");
   return rank(key, _root);
 } 
 
 // number of keys less than key in the subtree rooted at x
 template <typename Key, typename Value>
-int RedBlackBST<Key, Value>::rank(Key key, typename RedBlackBST<Key, Value>::Node* x) {
+int RedBlackBST<Key, Value>::rank(Key key, 
+  typename RedBlackBST<Key, Value>::Node* x) {
   if (!x) return 0; 
   bool cmp = isLess(key, x->_key); 
   if (!cmp && !isLess(x->_key, key)) return size(x->_left);
@@ -518,7 +543,8 @@ queue<Key> RedBlackBST<Key, Value>::keys(Key lo, Key hi) {
 // add the keys between lo and hi in the subtree rooted at x
 // to the queue
 template <typename Key, typename Value>
-void RedBlackBST<Key, Value>::keys(RedBlackBST<Key, Value>::Node* x, queue<Key>& keys_queue, Key lo, Key hi) {
+void RedBlackBST<Key, Value>::keys(typename RedBlackBST<Key, Value>::Node* x,
+  queue<Key>& keys_queue, Key lo, Key hi) {
   if (!x) return; 
   bool cmplo = isLess(lo, x->_key); 
   bool cmphi = isLess(hi, x->_key); 
@@ -567,7 +593,8 @@ bool RedBlackBST<Key, Value>::check() {
 // (if min or max is null, treat as empty constraint)
 // Credit: Bob Dondero's elegant solution
 template <typename Key, typename Value>
-bool RedBlackBST<Key, Value>::isBST(typename RedBlackBST<Key, Value>::Node* x, Key min, Key max) {
+bool RedBlackBST<Key, Value>::isBST(
+  typename RedBlackBST<Key, Value>::Node* x, Key min, Key max) {
   if (!x) return true;
   if (min != defaultValue<Key>() && !isLess(min, x->_key)) return false;
   if (max != defaultValue<Key>() && !isLess(x->_key, max)) return false;
@@ -575,7 +602,8 @@ bool RedBlackBST<Key, Value>::isBST(typename RedBlackBST<Key, Value>::Node* x, K
 } 
 
 template <typename Key, typename Value>
-bool RedBlackBST<Key, Value>::isSizeConsistent(typename RedBlackBST<Key, Value>::Node* x) {
+bool RedBlackBST<Key, Value>::isSizeConsistent(
+  typename RedBlackBST<Key, Value>::Node* x) {
   if (!x) return true;
   if (x->_size != size(x->_left) + size(x->_right) + 1) return false;
   return isSizeConsistent(x->_left) && isSizeConsistent(x->_right);
@@ -618,7 +646,8 @@ bool RedBlackBST<Key, Value>::isBalanced() {
 
 // does every path from the root to a leaf have the given number of black links?
 template <typename Key, typename Value>
-bool RedBlackBST<Key, Value>::isBalanced(typename RedBlackBST<Key, Value>::Node* x, int black) {
+bool RedBlackBST<Key, Value>::isBalanced(
+  typename RedBlackBST<Key, Value>::Node* x, int black) {
   if (!x) return black == 0;
   if (!isRed(x)) black--;
   return isBalanced(x->_left, black) && isBalanced(x->_right, black);

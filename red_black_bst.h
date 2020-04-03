@@ -37,7 +37,7 @@ class RedBlackBST {
     /**
      * Initializes an empty symbol table.
      */
- RedBlackBST(): _root(nullptr) {}
+  RedBlackBST(): _root(nullptr) {}
     /**
      * Returns the number of key-value pairs in this symbol table.
      * @return the number of key-value pairs in this symbol table
@@ -62,7 +62,8 @@ class RedBlackBST {
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
   Value get(Key key) {
-    if (key == defaultValue<Key>()) throw std::invalid_argument("argument to get() is null");
+    if (key == defaultValue<Key>()) 
+      throw std::invalid_argument("argument to get() is null");
     return get(_root, key);
   }
 
@@ -177,17 +178,6 @@ class RedBlackBST {
 
 
  private:
-  /* struct Node { */
-  /* Node(Key key, Value value, bool color, int size): _key(key), _value(value), */
-  /*     _color(color), _size(size) {} */
-  /*   Key _key; */
-  /*   Value _value; */
-  /*   Node *_left; */
-  /*   Node *_right; */
-  /*   bool _color; */
-  /*   int _size; */
-  /* }; */
-
   const static bool RED = true;
   const static bool BLACK = false;
   Node *_root;
