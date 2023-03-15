@@ -4,6 +4,7 @@
 #include <vector>
 #include <numeric>
 
+template <typename T>
 class WeightedQuickUnionUF {
 public:
     /**
@@ -14,8 +15,8 @@ public:
      * @param  n the number of elements
      * @throws IllegalArgumentException if {@code n < 0}
      */
-    WeightedQuickUnionUF(int n) noexcept : parent_(std::vector<int>(n)),
-                                           size_(std::vector<int>(n, 1)), count_(n) {
+    WeightedQuickUnionUF(int n) noexcept : parent_(std::vector<T>(n)),
+                                           size_(std::vector<T>(n, 1)), count_(n) {
         std::iota(parent_.begin(), parent_.end(), 0);
     }
     WeightedQuickUnionUF() = delete;
@@ -37,7 +38,7 @@ public:
      * @return the canonical element of the set containing {@code p}
      * @throws IllegalArgumentException unless {@code 0 <= p < n}
      */
-    int find(int p) const {
+    T find(T p) const {
         validate(p);
         while (p != parent_[p]) p = parent_[p];
         return p;
@@ -54,7 +55,7 @@ public:
      *         both {@code 0 <= p < n} and {@code 0 <= q < n}
      * @deprecated Replace with two calls to {@link #find(int)}.
      */
-    bool connected(int p, int q) const {
+    bool connected(T p, T q) const {
         return find(p) == find(q);
     }
 
@@ -67,14 +68,14 @@ public:
      * @throws IllegalArgumentException unless
      *         both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
-    void unionWith(int p, int q);
+    void unionWith(T p, T q);
 private:
     // validate that p is a valid index
-    void validate(int p) const;
+    void validate(T p) const;
 
 private:
-    std::vector<int> parent_;      /* parent_[i] = parent of i */
-    std::vector<int> size_;        /* size_[i] = number of elements in subtree rooted at i */
+    std::vector<T> parent_;      /* parent_[i] = parent of i */
+    std::vector<T> size_;        /* size_[i] = number of elements in subtree rooted at i */
     int count_;                   /* number of components */
 };
 

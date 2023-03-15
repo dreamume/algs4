@@ -76,14 +76,16 @@ using std::fstream;
 
 #endif
 
-void WeightedQuickUnionUF::validate(int p) const {
-    if (p < 0 || p >= static_cast<int>(parent_.size()))
+template <typename T>
+void WeightedQuickUnionUF<T>::validate(T p) const {
+    if (p < 0 || p >= static_cast<T>(parent_.size()))
         throw std::invalid_argument("invalid id index!");
 }
 
-void WeightedQuickUnionUF::unionWith(int p, int q) {
-  int root_p = find(p);
-  int root_q = find(q);
+template <typename T>
+void WeightedQuickUnionUF<T>::unionWith(T p, T q) {
+  T root_p = find(p);
+  T root_q = find(q);
 
   if (root_p == root_q) return;
 
@@ -119,7 +121,7 @@ int main(int args, char *argv[]) {
   std::getline(in, line);
   int n = stoi(line);
 
-  WeightedQuickUnionUF uf(n);
+  WeightedQuickUnionUF<int> uf(n);
   while (!in.eof()) {
     std::getline(in, line);
     std::stringstream ss(line);
