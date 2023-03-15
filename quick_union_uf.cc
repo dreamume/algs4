@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Compilation: clang++ -g -DDebug quick_union_uf.cc -std=c++11 -o quick_union_uf
+ *  Compilation: clang++ -g -DDebug quick_union_uf.cc -W -Wall -Wfatal-errors -std=c++20 -o quick_union_uf
  *  Execution:  quick_union_uf input.txt
  *  Dependencies: 
  *  Data files:   https://algs4.cs.princeton.edu/15uf/tinyUF.txt
@@ -75,19 +75,25 @@ using std::fstream;
 
 #endif
 
-void QuickUnionUF::validate(int p) {
-  if (p < 0 || p >= _parent.size())
-	throw std::invalid_argument("invalid id index!");
+void QuickUnionUF::validate(int p) const {
+    if (p < 0 || p >= static_cast<int>(parent_.size()))
+        throw std::invalid_argument("invalid id index!");
 }
 
 void QuickUnionUF::unionWith(int p, int q) {
-  int root_p = find(p);
-  int root_q = find(q);
+    int root_p = find(p);
+    int root_q = find(q);
 
-  if (root_p == root_q) return;
+    if (root_p == root_q) return;
 
-   _parent[root_p] = root_q;
-  _count--;
+    parent_[root_p] = root_q;
+    // if (rank_[root_p] < rank_[root_q]) {
+    //     parent_[root_p] = root_q;
+    // } else {
+    //     parent_[root_q] = root_p;
+    //     if (rank_[root_p] == rank_[root_q]) ++rank_[root_p];
+    // }
+    --count_;
 }
 
 /**
