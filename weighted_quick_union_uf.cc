@@ -76,9 +76,9 @@ using std::fstream;
 
 #endif
 
-void WeightedQuickUnionUF::validate(int p) {
-  if (p < 0 || p >= _parent.size())
-	throw std::invalid_argument("invalid id index!");
+void WeightedQuickUnionUF::validate(int p) const {
+    if (p < 0 || p >= static_cast<int>(parent_.size()))
+        throw std::invalid_argument("invalid id index!");
 }
 
 void WeightedQuickUnionUF::unionWith(int p, int q) {
@@ -88,14 +88,14 @@ void WeightedQuickUnionUF::unionWith(int p, int q) {
   if (root_p == root_q) return;
 
   // make smaller root point to larger one
-  if (_size[root_p] < _size[root_q]) {
-    _parent[root_p] = root_q;
-    _size[root_q] += _size[root_p];
+  if (size_[root_p] < size_[root_q]) {
+    parent_[root_p] = root_q;
+    size_[root_q] += size_[root_p];
   } else {
-    _parent[root_q] = root_p;
-    _size[root_p] += _size[root_q];
+    parent_[root_q] = root_p;
+    size_[root_p] += size_[root_q];
   }
-  --_count;
+  --count_;
 }
 
 /**
