@@ -75,14 +75,16 @@ using std::fstream;
 
 #endif
 
-void QuickUnionUF::validate(int p) const {
-    if (p < 0 || p >= static_cast<int>(parent_.size()))
+template<typename T>
+void QuickUnionUF<T>::validate(T p) const {
+    if (p < 0 || p >= static_cast<T>(parent_.size()))
         throw std::invalid_argument("invalid id index!");
 }
 
-void QuickUnionUF::unionWith(int p, int q) {
-    int root_p = find(p);
-    int root_q = find(q);
+template<typename T>
+void QuickUnionUF<T>::unionWith(T p, T q) {
+    T root_p = find(p);
+    T root_q = find(q);
 
     if (root_p == root_q) return;
 
@@ -117,7 +119,7 @@ int main(int args, char *argv[]) {
   std::getline(in, line);
   int n = stoi(line);
 
-  QuickUnionUF uf(n);
+  QuickUnionUF<int> uf(n);
   while (!in.eof()) {
     std::getline(in, line);
     std::stringstream ss(line);
