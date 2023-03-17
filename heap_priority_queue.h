@@ -3,11 +3,11 @@
 
 #include <vector>
 
-template<typename Key, class Cmp = std::less<Key>>
+template<class Key, class Cmp = std::less<Key>>
 class HeapPriorityQueue {
 public:
-    HeapPriorityQueue(int capacity) noexcept : pq_(capacity + 1) {}
-    HeapPriorityQueue(const std::vector<Key>& keys) noexcept;
+    HeapPriorityQueue(int capacity, const Cmp& cmp) noexcept : pq_(capacity + 1), cmp_(cmp) {}
+    HeapPriorityQueue(const std::vector<Key>& keys, const Cmp& cmp) noexcept;
     HeapPriorityQueue() noexcept : pq_(1) {}
     HeapPriorityQueue(const HeapPriorityQueue& other) = default;
     HeapPriorityQueue &operator=(const HeapPriorityQueue& other) = default;
@@ -22,12 +22,12 @@ public:
 
 private:
     void resize(int capacity);
-    void swim(Key k);
-    void sink(Key k);
+    void swim(int k);
+    void sink(int k);
 
 private:
     std::vector<Key> pq_;
-    int n_{0};
+    size_t n_{0};
     Cmp cmp_{};
 };
 

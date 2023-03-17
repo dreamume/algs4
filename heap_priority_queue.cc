@@ -27,26 +27,33 @@ using std::fstream;
 using std::vector;
 using std::swap;
 
-template<typename Key, class Cmp>
+template<class Key, class Cmp>
+HeapPriorityQueue<Key, Cmp>::HeapPriorityQueue(const vector<Key>& keys, const Cmp& cmp) noexcept : 
+    pq_(keys.size() + 1), n_(keys.size()), cmp_(cmp) {
+    for (size_t i = 0; i < n_; ++i) pq_[i + 1] = keys[i];
+    for (size_t i = n_ / 2; i >= 1; --i) sink(i);
+}
+
+template<class Key, class Cmp>
 Key HeapPriorityQueue<Key, Cmp>::min() const {
     if (isEmpty()) throw std::out_of_range("heap priority queue is empty!");
     return pq_[1];
 }
 
-template<typename Key, class Cmp>
+template<class Key, class Cmp>
 void HeapPriorityQueue<Key, Cmp>::resize(int capacity) {
-    assert(capacity > n_);
+    assert(capacity > static_cast<int>(n_));
     pq_.resize(capacity + 1);
 }
 
-template<typename Key, class Cmp>
+template<class Key, class Cmp>
 void HeapPriorityQueue<Key, Cmp>::insert(Key x) {
-    if (n_ == static_cast<int>(pq_.size()) - 1) resize(pq_.size() * 2);
+    if (n_ == pq_.size() - 1) resize(pq_.size() * 2);
     pq_[++n_] = x;
     swim(n_);
 }
 
-template<typename Key, class Cmp>
+template<class Key, class Cmp>
 Key HeapPriorityQueue<Key, Cmp>::delMin() {
     if (isEmpty()) throw std::out_of_range("heap priority queue is empty!");
     int res{pq_[1]};
@@ -57,18 +64,18 @@ Key HeapPriorityQueue<Key, Cmp>::delMin() {
     return res;
 }
 
-template<typename Key, class Cmp>
-void HeapPriorityQueue<Key, Cmp>::swim(Key k) {
+template<class Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::swim(int k) {
     while (k > 1 && cmp_(pq_[k], pq_[k / 2])) {
         swap(pq_[k/2], pq_[k]);
         k /= 2;
     }
 }
 
-template<typename Key, class Cmp>
-void HeapPriorityQueue<Key, Cmp>::sink(Key k) {
-    while (2 * k <= n_) {
-        int i{2 * k};
+template<class Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::sink(int k) {
+    while (2 * k <= static_cast<int>(n_)) {
+        size_t i = 2 * k;
         if (i < n_ && cmp_(pq_[i + 1], pq_[i])) ++i;
         if (!(cmp_(pq_[i], pq_[k]))) break;
         swap(pq_[k], pq_[i]);
