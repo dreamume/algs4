@@ -3,7 +3,7 @@
 
 #include <vector>
 
-template<typename Key>
+template<typename Key, class Cmp = std::less<Key>>
 class HeapPriorityQueue {
 public:
     HeapPriorityQueue(int capacity) noexcept : pq_(capacity + 1) {}
@@ -28,6 +28,7 @@ private:
 private:
     std::vector<Key> pq_;
     int n_{0};
+    Cmp cmp_{};
 };
 
 #endif

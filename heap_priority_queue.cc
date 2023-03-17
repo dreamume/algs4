@@ -27,27 +27,27 @@ using std::fstream;
 using std::vector;
 using std::swap;
 
-template<typename Key>
-Key HeapPriorityQueue<Key>::min() const {
+template<typename Key, class Cmp>
+Key HeapPriorityQueue<Key, Cmp>::min() const {
     if (isEmpty()) throw std::out_of_range("heap priority queue is empty!");
     return pq_[1];
 }
 
-template<typename Key>
-void HeapPriorityQueue<Key>::resize(int capacity) {
+template<typename Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::resize(int capacity) {
     assert(capacity > n_);
     pq_.resize(capacity + 1);
 }
 
-template<typename Key>
-void HeapPriorityQueue<Key>::insert(Key x) {
+template<typename Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::insert(Key x) {
     if (n_ == static_cast<int>(pq_.size()) - 1) resize(pq_.size() * 2);
     pq_[++n_] = x;
     swim(n_);
 }
 
-template<typename Key>
-Key HeapPriorityQueue<Key>::delMin() {
+template<typename Key, class Cmp>
+Key HeapPriorityQueue<Key, Cmp>::delMin() {
     if (isEmpty()) throw std::out_of_range("heap priority queue is empty!");
     int res{pq_[1]};
     swap(pq_[1], pq_[n_--]);
@@ -57,20 +57,20 @@ Key HeapPriorityQueue<Key>::delMin() {
     return res;
 }
 
-template<typename Key>
-void HeapPriorityQueue<Key>::swim(Key k) {
-    while (k > 1 && pq_[k / 2] > pq_[k]) {
+template<typename Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::swim(Key k) {
+    while (k > 1 && cmp_(pq_[k], pq_[k / 2])) {
         swap(pq_[k/2], pq_[k]);
         k /= 2;
     }
 }
 
-template<typename Key>
-void HeapPriorityQueue<Key>::sink(Key k) {
+template<typename Key, class Cmp>
+void HeapPriorityQueue<Key, Cmp>::sink(Key k) {
     while (2 * k <= n_) {
         int i{2 * k};
-        if (i < n_ && pq_[i] > pq_[i + 1]) ++i;
-        if (pq_[k] <= pq_[i]) break;
+        if (i < n_ && cmp_(pq_[i + 1], pq_[i])) ++i;
+        if (!(cmp_(pq_[i], pq_[k]))) break;
         swap(pq_[k], pq_[i]);
         k = i;
     }
@@ -92,6 +92,6 @@ int main(int args, char *argv[]) {
         else if (c != ' ') pq.insert(c);
     });
 
-    std::cout << "(" << pq.size() << " left on pq" << std::endl;
+    std::cout << "(" << pq.size() << " left on pq)" << std::endl;
 }
 #endif
