@@ -19,8 +19,10 @@
 #include <cstdio>
 #include <string>
 #include <fstream>
+#include <utility>
 
 using std::fstream;
+using std::pair;
 
 #endif
 
@@ -56,7 +58,7 @@ void HeapPriorityQueue<Key, Cmp>::insert(Key x) {
 template<class Key, class Cmp>
 Key HeapPriorityQueue<Key, Cmp>::delMin() {
     if (isEmpty()) throw std::out_of_range("heap priority queue is empty!");
-    int res{pq_[1]};
+    Key res{pq_[1]};
     swap(pq_[1], pq_[n_--]);
     sink(1);
     if (n_ > 0 && n_ == (pq_.size() - 1) / 4) resize(pq_.size() / 2);
@@ -100,5 +102,20 @@ int main(int args, char *argv[]) {
     });
 
     std::cout << "(" << pq.size() << " left on pq)" << std::endl;
+
+    auto cmp = [](const pair<int, int>& lhs, const pair<int, int>& rhs) {
+        return lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second);
+    };
+    HeapPriorityQueue<pair<int, int>, decltype(cmp)> pq2(1000, cmp);
+
+    vector<pair<int, int>> data{{1,2}, {2,3}, {3, 4}};
+    HeapPriorityQueue<pair<int, int>, decltype(cmp)> pq3(data, cmp);
+    HeapPriorityQueue<pair<int, int>, decltype(cmp)> pq4 = std::move(pq3);
+
+    while (!pq4.isEmpty()) {
+        auto item = pq4.delMin();
+        std::cout << "(" << item.first << ',' << item.second << "), ";
+    }
+    std::cout << std::endl;
 }
 #endif
