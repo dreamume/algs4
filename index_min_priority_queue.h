@@ -6,10 +6,9 @@
 template<class Key, class Cmp = std::greater<Key>>
 class IndexMinPriorityQueue {
 public:
-  IndexMinPriorityQueue(int maxn, const Cmp& cmp) noexcept 
-      : max_n_(maxn), pq_(maxn + 1), 
-        qp_(maxn + 1, -1), keys_(maxn + 1), cmp_(cmp) {}
-  //IndexMinPriorityQueue(int maxn) noexcept : max_n_(maxn), pq_(1), qp_(1), keys_(1) {}
+    IndexMinPriorityQueue(int maxn, const Cmp& cmp) noexcept 
+        : max_n_(maxn), pq_(maxn + 1), 
+          qp_(maxn + 1, -1), keys_(maxn + 1), cmp_(cmp) {}
     IndexMinPriorityQueue() = delete;
     IndexMinPriorityQueue(const IndexMinPriorityQueue& other) = default;
     IndexMinPriorityQueue &operator=(const IndexMinPriorityQueue& other) = default;
