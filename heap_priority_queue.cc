@@ -34,6 +34,7 @@ HeapPriorityQueue<Key, Cmp>::HeapPriorityQueue(const vector<Key>& keys, const Cm
     pq_(keys.size() + 1), n_(keys.size()), cmp_(cmp) {
     for (size_t i = 0; i < n_; ++i) pq_[i + 1] = keys[i];
     for (size_t i = n_ / 2; i >= 1; --i) sink(i);
+    assert(isMinHeap());
 }
 
 template<class Key, class Cmp>
@@ -53,6 +54,7 @@ void HeapPriorityQueue<Key, Cmp>::insert(Key x) {
     if (n_ == pq_.size() - 1) resize(pq_.size() * 2);
     pq_[++n_] = x;
     swim(n_);
+    assert(isMinHeap());
 }
 
 template<class Key, class Cmp>
@@ -62,24 +64,40 @@ Key HeapPriorityQueue<Key, Cmp>::delMin() {
     swap(pq_[1], pq_[n_--]);
     sink(1);
     if (n_ > 0 && n_ == (pq_.size() - 1) / 4) resize(pq_.size() / 2);
+    assert(isMinHeap());
 
     return res;
 }
 
 template<class Key, class Cmp>
 void HeapPriorityQueue<Key, Cmp>::swim(int k) {
-    while (k > 1 && cmp_(pq_[k], pq_[k / 2])) {
+    while (k > 1 && cmp_(pq_[k/2], pq_[k])) {
         swap(pq_[k/2], pq_[k]);
         k /= 2;
     }
 }
 
 template<class Key, class Cmp>
+bool HeapPriorityQueue<Key, Cmp>::isMinHeap() const {
+    return isMinHeapOrdered(1);
+}
+
+template<class Key, class Cmp>
+bool HeapPriorityQueue<Key, Cmp>::isMinHeapOrdered(int k) const {
+    if (k > static_cast<int>(n_)) return true;
+    int left = 2 * k;
+    int right = left + 1;
+    if (left <= static_cast<int>(n_) && cmp_(pq_[k], pq_[left])) return false;
+    if (right <= static_cast<int>(n_) && cmp_(pq_[k], pq_[right])) return false;
+    return isMinHeapOrdered(left) && isMinHeapOrdered(right);
+}
+
+template<class Key, class Cmp>
 void HeapPriorityQueue<Key, Cmp>::sink(int k) {
     while (2 * k <= static_cast<int>(n_)) {
         size_t i = 2 * k;
-        if (i < n_ && cmp_(pq_[i + 1], pq_[i])) ++i;
-        if (!(cmp_(pq_[i], pq_[k]))) break;
+        if (i < n_ && cmp_(pq_[i], pq_[i+1])) ++i;
+        if (!(cmp_(pq_[k], pq_[i]))) break;
         swap(pq_[k], pq_[i]);
         k = i;
     }
@@ -104,7 +122,7 @@ int main(int args, char *argv[]) {
     std::cout << "(" << pq.size() << " left on pq)" << std::endl;
 
     auto cmp = [](const pair<int, int>& lhs, const pair<int, int>& rhs) {
-        return lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second);
+        return lhs.first > rhs.first || (lhs.first == rhs.first && lhs.second > rhs.second);
     };
     HeapPriorityQueue<pair<int, int>, decltype(cmp)> pq2(1000, cmp);
 

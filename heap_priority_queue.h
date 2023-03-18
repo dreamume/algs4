@@ -3,7 +3,7 @@
 
 #include <vector>
 
-template<class Key, class Cmp = std::less<Key>>
+template<class Key, class Cmp = std::greater<Key>>
 class HeapPriorityQueue {
 public:
     HeapPriorityQueue(int capacity, const Cmp& cmp) noexcept : pq_(capacity + 1), cmp_(cmp) {}
@@ -24,6 +24,8 @@ private:
     void resize(int capacity);
     void swim(int k);
     void sink(int k);
+    bool isMinHeap() const;
+    bool isMinHeapOrdered(int k) const;
 
 private:
     std::vector<Key> pq_;
