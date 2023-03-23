@@ -62,10 +62,11 @@ using std::fstream;
  * @param  V the number of vertices
  * @throws IllegalArgumentException if {@code V < 0}
  */
-Digraph::Digraph(int V): _V(V), _E(0) {
-  if (V < 0) throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
-  _indegree.resize(V);
-  _adj.resize(V);
+Digraph::Digraph(int V): v_(V) {
+    if (V < 0) 
+        throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
+    indegree_.resize(V);
+    adj_.resize(V);
 }
 
 /**  
@@ -80,32 +81,32 @@ Digraph::Digraph(int V): _V(V), _E(0) {
  * @throws IllegalArgumentException if the input stream is in the wrong format
  */
 Digraph::Digraph(fstream& in) {
-  try {
-	string line;
-	std::getline(in, line);
-	_V = stoi(line);
+    try {
+        string line;
+        std::getline(in, line);
+        v_ = stoi(line);
 
-	if (_V < 0) 
-	  throw std::invalid_argument("number of vertices in a Digraph must be nonnegative");
-	_indegree.resize(_V);
-	_adj.resize(_V);
-	std::getline(in, line);
-	int E = stoi(line);
-	if (E < 0) 
-	  throw std::invalid_argument("number of edges in a Digraph must be nonnegative");
-	for (int i = 0; i < E; i++) {
-	  std::getline(in, line);
-	  const char* str = line.c_str();
-	  char *end;
-	  int v = std::strtol(str, &end, 10);
-	  str = end;
-	  int w = std::strtol(str, &end, 10);
-	  addEdge(v, w); 
-	}
-  }
-  catch (...) {
-	throw;
-  }
+        if (v_ < 0) 
+            throw std::invalid_argument("number of vertices in a Digraph must be nonnegative");
+        indegree_.resize(v_);
+        adj_.resize(v_);
+        std::getline(in, line);
+        int E = stoi(line);
+        if (E < 0) 
+            throw std::invalid_argument("number of edges in a Digraph must be nonnegative");
+        for (int i = 0; i < E; i++) {
+            std::getline(in, line);
+            const char* str = line.c_str();
+            char *end;
+            int v = std::strtol(str, &end, 10);
+            str = end;
+            int w = std::strtol(str, &end, 10);
+            addEdge(v, w); 
+        }
+    }
+    catch (...) {
+        throw;
+    }
 }
 
 /**
@@ -113,18 +114,18 @@ Digraph::Digraph(fstream& in) {
  *
  * @param  G the digraph to copy
  */
-Digraph::Digraph(const Digraph& G): Digraph(G.V()) {
-  _E = G.E();
-  _indegree.resize(_V);
-  for (int i = 0; i < _V; ++i) _indegree[i] = G.indegree(i);
-  for (int v = 0; v < G.V(); v++) _adj[v] = G.adj(v);
+Digraph::Digraph(const Digraph& G) noexcept : Digraph(G.V()) {
+    e_ = G.E();
+    indegree_.resize(v_);
+    for (int i = 0; i < v_; ++i) indegree_[i] = G.indegree(i);
+    for (int v = 0; v < G.V(); v++) adj_[v] = G.adj(v);
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
 void Digraph::validateVertex(int v) const {
-  if (v < 0 || v >= _V)
-	throw std::invalid_argument("vertex " + std::to_string(v) + 
-						   " is not between 0 and " + std::to_string(_V-1));
+    if (v < 0 || v >= v_)
+        throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                    " is not between 0 and " + std::to_string(v_-1));
 }
 
 /**
@@ -135,11 +136,11 @@ void Digraph::validateVertex(int v) const {
  * @throws IllegalArgumentException unless both {@code 0 <= v < V} and {@code 0 <= w < V}
  */
 void Digraph::addEdge(int v, int w) {
-  validateVertex(v);
-  validateVertex(w);
-  _adj[v].push_back(w);
-  _indegree[w]++;
-  _E++;
+    validateVertex(v);
+    validateVertex(w);
+    adj_[v].push_back(w);
+    ++indegree_[w];
+    ++e_;
 }
 
 /**
@@ -150,8 +151,8 @@ void Digraph::addEdge(int v, int w) {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 const vector<int>& Digraph::adj(int v) const {
-  validateVertex(v);
-  return _adj[v];
+    validateVertex(v);
+    return adj_[v];
 }
 
 /**
@@ -163,8 +164,8 @@ const vector<int>& Digraph::adj(int v) const {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int Digraph::outdegree(int v) const {
-  validateVertex(v);
-  return _adj[v].size();
+    validateVertex(v);
+    return adj_[v].size();
 }
 
 /**
@@ -176,8 +177,8 @@ int Digraph::outdegree(int v) const {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int Digraph::indegree(int v) const {
-  validateVertex(v);
-  return _indegree[v];
+    validateVertex(v);
+    return indegree_[v];
 }
 
 /**
@@ -186,12 +187,12 @@ int Digraph::indegree(int v) const {
  * @return the reverse of the digraph
  */
 Digraph* Digraph::reverse() const {
-  Digraph* reverse = new Digraph(_V);
-  for (int v = 0; v < _V; v++)
-	for (int w : adj(v))
-	  reverse->addEdge(w, v);
+    Digraph* reverse = new Digraph(v_);
+    for (int v = 0; v < v_; v++)
+        for (int w : adj(v))
+            reverse->addEdge(w, v);
 
-  return reverse;
+    return reverse;
 }
 
 /**
@@ -201,15 +202,15 @@ Digraph* Digraph::reverse() const {
  *         followed by the <em>V</em> adjacency lists
  */
 string Digraph::toString() const {
-  string s = 
-	std::to_string(_V) + " vertices, " + std::to_string(_E) + " edges \n";
-  for (int v = 0; v < _V; v++) {
-	s += std::to_string(v) + ": ";
-	for (int w : _adj[v]) s += std::to_string(w) + " ";
-	s += "\n";
-  }
+    string s = 
+        std::to_string(v_) + " vertices, " + std::to_string(e_) + " edges \n";
+    for (int v = 0; v < v_; v++) {
+        s += std::to_string(v) + ": ";
+        for (int w : adj_[v]) s += std::to_string(w) + " ";
+        s += "\n";
+    }
 
-  return s;
+    return s;
 }
 
 /**
@@ -220,14 +221,14 @@ string Digraph::toString() const {
 #ifdef Debug
 #include <iostream>
 int main(int args, char *argv[]) {
-  fstream in(argv[1]);
-  if (!in.is_open()) {
-	std::cout << "failed to open " << argv[1] << '\n';
-	return 1;
-  }
+    fstream in(argv[1]);
+    if (!in.is_open()) {
+        std::cout << "failed to open " << argv[1] << '\n';
+        return 1;
+    }
 
-  Digraph G(in);
-  printf("%s\n", G.toString().c_str());
+    Digraph G(in);
+    printf("%s\n", G.toString().c_str());
 }
 #endif
 

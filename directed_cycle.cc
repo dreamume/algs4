@@ -56,60 +56,60 @@ using std::stack;
  * finds such a cycle.
  * @param G the digraph
  */
-DirectedCycle::DirectedCycle(const Digraph& G) {
-  _marked.resize(G.V());
-  _edge_to.resize(G.V());
-  _on_stack.resize(G.V());
-  for (int v = 0; v < G.V(); v++)
-	if (!_marked[v] && _cycle.empty()) dfs(G, v);
+DirectedCycle::DirectedCycle(const Digraph& G) noexcept {
+    marked_.resize(G.V());
+    edge_to_.resize(G.V());
+    on_stack_.resize(G.V());
+    for (int v = 0; v < G.V(); v++)
+        if (!marked_[v] && cycle_.empty()) dfs(G, v);
 }
 
 // check that algorithm computes either the topological order or finds a directed cycle
 void DirectedCycle::dfs(const Digraph& G, int v) {
-  _on_stack[v] = true;
-  _marked[v] = true;
-  for (int w : G.adj(v)) {
+    on_stack_[v] = true;
+    marked_[v] = true;
+    for_each(G.adj(v).begin(), G.adj(v).end(), [&](int w) {
 
-	// short circuit if directed cycle found
-	if (!_cycle.empty()) return;
+        // short circuit if directed cycle found
+        if (!cycle_.empty()) return;
 
-	// found new vertex, so recur
-	else if (!_marked[w]) {
-	  _edge_to[w] = v;
-	  dfs(G, w);
-	}
+        // found new vertex, so recur
+        else if (!marked_[w]) {
+            edge_to_[w] = v;
+            dfs(G, w);
+        }
 
-	// trace back directed cycle
-	else if (_on_stack[w]) {
-	  for (int x = v; x != w; x = _edge_to[x]) {
-		_cycle.push(x);
-	  }
-	  _cycle.push(w);
-	  _cycle.push(v);
-	  assert(check());
-	}
-  }
-  _on_stack[v] = false;
+        // trace back directed cycle
+        else if (on_stack_[w]) {
+            for (int x = v; x != w; x = edge_to_[x]) {
+                cycle_.push(x);
+            }
+            cycle_.push(w);
+            cycle_.push(v);
+            assert(check());
+        }
+    });
+    on_stack_[v] = false;
 }
 
 // certify that digraph has a directed cycle if it reports one
 bool DirectedCycle::check() const {
-  if (hasCycle()) {
-	// verify cycle
-	int first = -1, last = -1;
-	stack<int> the_cycle = cycle();
-	while (!the_cycle.empty()) {
-	  if (first == -1) first = the_cycle.top();
-	  last = the_cycle.top();
-	  the_cycle.pop();
-	}
-	if (first != last) {
-	  printf("cycle begins with %d and ends with %d\n", first, last);
-	  return false;
-	}
-  }
+    if (hasCycle()) {
+        // verify cycle
+        int first = -1, last = -1;
+        stack<int> thecycle_ = cycle();
+        while (!thecycle_.empty()) {
+            if (first == -1) first = thecycle_.top();
+            last = thecycle_.top();
+            thecycle_.pop();
+        }
+        if (first != last) {
+            printf("cycle begins with %d and ends with %d\n", first, last);
+            return false;
+        }
+    }
 
-  return true;
+    return true;
 }
 
 /**
@@ -122,26 +122,26 @@ bool DirectedCycle::check() const {
 #include <fstream>
 using std::fstream;
 int main(int args, char *argv[]) {
-  fstream in(argv[1]);
-  if (!in.is_open()) {
-	std::cout << "failed to open " << argv[1] << '\n';
-	return 1;
-  }
+    fstream in(argv[1]);
+    if (!in.is_open()) {
+        std::cout << "failed to open " << argv[1] << '\n';
+        return 1;
+    }
 
-  Digraph G(in);
-  DirectedCycle finder(G);
-  if (finder.hasCycle()) {
-	printf("Directed cycle: ");
-	stack<int> the_cycle = finder.cycle();
-	while (!the_cycle.empty()) {
-	  printf("%d ", the_cycle.top());
-	  the_cycle.pop();
-	}
-	printf("\n");
-  } else {
-	printf("No directed cycle\n");
-  }
-  printf("\n");
+    Digraph G(in);
+    DirectedCycle finder(G);
+    if (finder.hasCycle()) {
+        printf("Directed cycle: ");
+        stack<int> thecycle_ = finder.cycle();
+        while (!thecycle_.empty()) {
+            printf("%d ", thecycle_.top());
+            thecycle_.pop();
+        }
+        printf("\n");
+    } else {
+        printf("No directed cycle\n");
+    }
+    printf("\n");
 }
 #endif
 
