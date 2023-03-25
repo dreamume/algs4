@@ -1,6 +1,6 @@
 /******************************************************************************
- *  Compilation:  clang++ -c directed_edge.cc -std=c++11
- *                clang++ -g -DDebug edge_weighted_digraph.cc directed_edge.o -std=c++11 -o edge_weighted_digraph
+ *  Compilation:  clang++ -c directed_edge.cc -std=c++20
+ *                clang++ -g -DDebug edge_weighted_digraph.cc directed_edge.o -std=c++20 -o edge_weighted_digraph
  *  Execution:    ./edge_weighted_digraph input.txt
  *  Dependencies: directed_edge.h
  *  Data files:   https://algs4.cs.princeton.edu/44st/tinyEWD.txt

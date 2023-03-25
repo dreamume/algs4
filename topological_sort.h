@@ -36,57 +36,62 @@
 #include "edge_weighted_digraph.h"
 
 class Topological {
- public:
-  /**
-   * Determines whether the digraph {@code G} has a topological order and, if so,
-   * finds such a topological order.
-   * @param G the digraph
-   */
-  Topological(const Digraph& G);
-  /**
-   * Determines whether the edge-weighted digraph {@code G} has a topological
-   * order and, if so, finds such an order.
-   * @param G the edge-weighted digraph
-   */
-  Topological(const EdgeWeightedDigraph& G);
-  /**
-   * Returns a topological order if the digraph has a topologial order,
-   * and {@code null} otherwise.
-   * @return a topological order of the vertices (as an interable) if the
-   *    digraph has a topological order (or equivalently, if the digraph is a DAG),
-   *    and {@code null} otherwise
-   */
-  std::vector<int>& order() { return _order; }
-  /**
-   * Does the digraph have a topological order?
-   * @return {@code true} if the digraph has a topological order (or equivalently,
-   *    if the digraph is a DAG), and {@code false} otherwise
-   */
-  bool hasOrder() const { return _order.size() > 0; }
+public:
+    /**
+     * Determines whether the digraph {@code G} has a topological order and, if so,
+     * finds such a topological order.
+     * @param G the digraph
+     */
+    Topological(const Digraph& G) noexcept;
+    /**
+     * Determines whether the edge-weighted digraph {@code G} has a topological
+     * order and, if so, finds such an order.
+     * @param G the edge-weighted digraph
+     */
+    Topological(const EdgeWeightedDigraph& G) noexcept;
+    Topological() = delete;
+    Topological(const Topological& other) = default;
+    Topological &operator=(const Topological& other) = default;
+    Topological(Topological&& other) = default;
+    Topological &operator=(Topological&& other) = default;
+    /**
+     * Returns a topological order if the digraph has a topologial order,
+     * and {@code null} otherwise.
+     * @return a topological order of the vertices (as an interable) if the
+     *    digraph has a topological order (or equivalently, if the digraph is a DAG),
+     *    and {@code null} otherwise
+     */
+    std::vector<int>& order() { return order_; }
+    /**
+     * Does the digraph have a topological order?
+     * @return {@code true} if the digraph has a topological order (or equivalently,
+     *    if the digraph is a DAG), and {@code false} otherwise
+     */
+    bool hasOrder() const { return order_.size() > 0; }
 
-  /**
-   * Does the digraph have a topological order?
-   * @return {@code true} if the digraph has a topological order (or equivalently,
-   *    if the digraph is a DAG), and {@code false} otherwise
-   * @deprecated Replaced by {@link #hasOrder()}.
-   */
-  bool isDAG() const { return hasOrder(); }
-  /**
-   * The the rank of vertex {@code v} in the topological order;
-   * -1 if the digraph is not a DAG
-   *
-   * @param v the vertex
-   * @return the position of vertex {@code v} in a topological order
-   *    of the digraph; -1 if the digraph is not a DAG
-   * @throws IllegalArgumentException unless {@code 0 <= v < V}
-   */
-  int rank(int v) const;
- private:
-    // throw an IllegalArgumentException unless {@code 0 <= v < V}
-  void validateVertex(int v) const;
+    /**
+     * Does the digraph have a topological order?
+     * @return {@code true} if the digraph has a topological order (or equivalently,
+     *    if the digraph is a DAG), and {@code false} otherwise
+     * @deprecated Replaced by {@link #hasOrder()}.
+     */
+    bool isDAG() const { return hasOrder(); }
+    /**
+     * The the rank of vertex {@code v} in the topological order;
+     * -1 if the digraph is not a DAG
+     *
+     * @param v the vertex
+     * @return the position of vertex {@code v} in a topological order
+     *    of the digraph; -1 if the digraph is not a DAG
+     * @throws IllegalArgumentException unless {@code 0 <= v < V}
+     */
+    int rank(int v) const;
 private:
-  std::vector<int> _order;  // topological order
-  std::vector<int> _rank;               // rank[v] = rank of vertex v in order
+    // throw an IllegalArgumentException unless {@code 0 <= v < V}
+    void validateVertex(int v) const;
+private:
+    std::vector<int> order_;  // topological order
+    std::vector<int> rank_;               // rank[v] = rank of vertex v in order
 };
 
 #endif

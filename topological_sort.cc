@@ -1,12 +1,12 @@
 /******************************************************************************
- *  Compilation:  clang++ -c -O2 digraph.cc -std=c++11
- *                clang++ -c -O2 directed_edge.cc -std=c++11
- *                clang++ -c -O2 edge_weighted_digraph.cc -std=c++11
- *                clang++ -c -O2 depth_first_order.cc -std=c++11
- *                clang++ -c -O2 directed_cycle.cc -std=c++11
- *                clang++ -c -O2 edge_weighted_directed_cycle.cc -std=c++11
- *                clang++ -c -O2 symbol_digraph.cc -std=c++11
- *                clang++ -DDebug -O2 topological_sort.cc digraph.o directed_edge.o edge_weighted_digraph.o depth_first_order.o directed_cycle.o edge_weighted_directed_cycle.o symbol_digraph.o -std=c++11 -o topological_sort
+ *  Compilation:  clang++ -c -O2 digraph.cc -std=c++20
+ *                clang++ -c -O2 directed_edge.cc -std=c++20
+ *                clang++ -c -O2 edge_weighted_digraph.cc -std=c++20
+ *                clang++ -c -O2 depth_first_order.cc -std=c++20
+ *                clang++ -c -O2 directed_cycle.cc -std=c++20
+ *                clang++ -c -O2 edge_weighted_directed_cycle.cc -std=c++20
+ *                clang++ -c -O2 symbol_digraph.cc -std=c++20
+ *                clang++ -DDebug -O2 topological_sort.cc digraph.o directed_edge.o edge_weighted_digraph.o depth_first_order.o directed_cycle.o edge_weighted_directed_cycle.o symbol_digraph.o -std=c++20 -o topological_sort
  *  Execution:    ./topological filename.txt delimiter
  *  Dependencies: digraph.h depth_first_order.h directed_cycle.h
  *                depth_first_order.h edge_weighted_directed_cycle.h
@@ -79,16 +79,16 @@ using std::string;
  * finds such a topological order.
  * @param G the digraph
  */
-Topological::Topological(const Digraph& G) {
-  DirectedCycle finder(G);
-  if (!finder.hasCycle()) {
-	DepthFirstOrder dfs(G);
-	_order = dfs.reversePost();
-	_rank.resize(G.V());
-	int i = 0;
-	for (int v : _order)
-	  _rank[v] = i++;
-  }
+Topological::Topological(const Digraph& G) noexcept {
+    DirectedCycle finder(G);
+    if (!finder.hasCycle()) {
+        DepthFirstOrder dfs(G);
+        order_ = dfs.reversePost();
+        rank_.resize(G.V());
+        int i = 0;
+        for (int v : order_)
+            rank_[v] = i++;
+    }
 }
 
 /**
@@ -96,12 +96,12 @@ Topological::Topological(const Digraph& G) {
  * order and, if so, finds such an order.
  * @param G the edge-weighted digraph
  */
-Topological::Topological(const EdgeWeightedDigraph& G) {
-  EdgeWeightedDirectedCycle finder(G);
-  if (!finder.hasCycle()) {
-	DepthFirstOrder dfs(G);
-	_order = dfs.reversePost();
-  }
+Topological::Topological(const EdgeWeightedDigraph& G) noexcept {
+    EdgeWeightedDirectedCycle finder(G);
+    if (!finder.hasCycle()) {
+        DepthFirstOrder dfs(G);
+        order_ = dfs.reversePost();
+    }
 }
 
 /**
@@ -114,17 +114,17 @@ Topological::Topological(const EdgeWeightedDigraph& G) {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int Topological::rank(int v) const {
-  validateVertex(v);
-  if (hasOrder()) return _rank[v];
-  else            return -1;
+    validateVertex(v);
+    if (hasOrder()) return rank_[v];
+    else            return -1;
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
 void Topological::validateVertex(int v) const {
-  int V = _rank.size();
-  if (v < 0 || v >= V)
-	throw std::invalid_argument("vertex " + std::to_string(v) + 
-								" is not between 0 and " + std::to_string(V-1));
+    int V = rank_.size();
+    if (v < 0 || v >= V)
+        throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                    " is not between 0 and " + std::to_string(V-1));
 }
 
 /**
@@ -134,13 +134,13 @@ void Topological::validateVertex(int v) const {
  */
 #ifdef Debug
 int main(int argc, char *argv[]) {
-  string filename  = argv[1];
-  string delimiter{" "};
-  if (argc > 2) delimiter = argv[2];
-  SymbolDigraph sg(argv[1], delimiter);
-  Topological topological(*sg.digraph());
-  for (int v : topological.order()) {
-	printf("%s\n", sg.nameOf(v).c_str());
-  }
+    string filename  = argv[1];
+    string delimiter{" "};
+    if (argc > 2) delimiter = argv[2];
+    SymbolDigraph sg(argv[1], delimiter);
+    Topological topological(*sg.digraph());
+    for (int v : topological.order()) {
+        printf("%s\n", sg.nameOf(v).c_str());
+    }
 }
 #endif

@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Compilation:  clang++ -DDebug -O2 digraph.cc -std=c++11 -o digraph
+ *  Compilation:  clang++ -DDebug -O2 digraph.cc -std=c++20 -o digraph
  *  Execution:    ./digraph filename.txt
  *  Dependencies: 
  *  Data files:   https://algs4.cs.princeton.edu/42digraph/tinyDG.txt

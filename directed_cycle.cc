@@ -1,6 +1,6 @@
 /******************************************************************************
- *  Compilation:  clang++ -c -O2 digraph.cc -std=c++11
- *                clang++ -DDebug -O2 directed_cycle.cc digraph.o -std=c++11 -o directed_cycle
+ *  Compilation:  clang++ -c -O2 digraph.cc -std=c++20
+ *                clang++ -DDebug -O2 directed_cycle.cc digraph.o -std=c++20 -o directed_cycle
  *  Execution:    ./directed_cycle input.txt
  *  Dependencies: digraph.cc
  *  Data files:   https://algs4.cs.princeton.edu/42digraph/tinyDG.txt

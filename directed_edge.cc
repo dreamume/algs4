@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Compilation:  clang++ -g -DDebug directed_edge.cc -std=c++11 -o directed_edge
+ *  Compilation:  clang++ -g -DDebug directed_edge.cc -std=c++20 -o directed_edge
  *  Execution:    ./directed_edge
  *  Dependencies: 
  *

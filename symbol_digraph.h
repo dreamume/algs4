@@ -28,78 +28,83 @@
 class Digraph;
 
 class SymbolDigraph {
- public:
-  /**  
-   * Initializes a digraph from a file using the specified delimiter.
-   * Each line in the file contains
-   * the name of a vertex, followed by a list of the names
-   * of the vertices adjacent to that vertex, separated by the delimiter.
-   * @param filename the name of the file
-   * @param delimiter the delimiter between fields
-   */
-  SymbolDigraph(const std::string& filename, const std::string& delimiter);
-  /**
-   * Does the digraph contain the vertex named {@code s}?
-   * @param s the name of a vertex
-   * @return {@code true} if {@code s} is the name of a vertex, and {@code false} otherwise
-   */
-  bool contains(const std::string& s) const { return _vertex.find(s) != _vertex.end(); }
-  /**
-   * Returns the integer associated with the vertex named {@code s}.
-   * @param s the name of a vertex
-   * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
-   * @deprecated Replaced by {@link #indexOf(String)}.
-   */
-  int index(const std::string& s) { return _vertex[s]; }
-  /**
-   * Returns the integer associated with the vertex named {@code s}.
-   * @param s the name of a vertex
-   * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
-   */
-  int indexOf(const std::string& s) { return _vertex[s]; }
-  /**
-   * Returns the name of the vertex associated with the integer {@code v}.
-   * @param  v the integer corresponding to a vertex (between 0 and <em>V</em> - 1) 
-   * @return the name of the vertex associated with the integer {@code v}
-   * @throws IllegalArgumentException unless {@code 0 <= v < V}
-   * @deprecated Replaced by {@link #nameOf(int)}.
-   */
-  std::string name(int v) const { 
-	validateVertex(v);
-	return _keys[v];
-  }
-  /**
-   * Returns the name of the vertex associated with the integer {@code v}.
-   * @param  v the integer corresponding to a vertex (between 0 and <em>V</em> - 1) 
-   * @return the name of the vertex associated with the integer {@code v}
-   * @throws IllegalArgumentException unless {@code 0 <= v < V}
-   */
-  std::string nameOf(int v) const {
-      validateVertex(v);
-      return _keys[v];
-  }
+public:
+    /**  
+     * Initializes a digraph from a file using the specified delimiter.
+     * Each line in the file contains
+     * the name of a vertex, followed by a list of the names
+     * of the vertices adjacent to that vertex, separated by the delimiter.
+     * @param filename the name of the file
+     * @param delimiter the delimiter between fields
+     */
+    SymbolDigraph(const std::string& filename, const std::string& delimiter) noexcept;
+    SymbolDigraph() = delete;
+    SymbolDigraph(const SymbolDigraph& other) = delete;
+    SymbolDigraph &operator=(const SymbolDigraph& other) = delete;
+    SymbolDigraph(SymbolDigraph&& other) = delete;
+    SymbolDigraph &operator=(SymbolDigraph&& other) = delete;
+    /**
+     * Does the digraph contain the vertex named {@code s}?
+     * @param s the name of a vertex
+     * @return {@code true} if {@code s} is the name of a vertex, and {@code false} otherwise
+     */
+    bool contains(const std::string& s) const { return vertex_.find(s) != vertex_.end(); }
+    /**
+     * Returns the integer associated with the vertex named {@code s}.
+     * @param s the name of a vertex
+     * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
+     * @deprecated Replaced by {@link #indexOf(String)}.
+     */
+    int index(const std::string& s) { return vertex_[s]; }
+    /**
+     * Returns the integer associated with the vertex named {@code s}.
+     * @param s the name of a vertex
+     * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
+     */
+    int indexOf(const std::string& s) { return vertex_[s]; }
+    /**
+     * Returns the name of the vertex associated with the integer {@code v}.
+     * @param  v the integer corresponding to a vertex (between 0 and <em>V</em> - 1) 
+     * @return the name of the vertex associated with the integer {@code v}
+     * @throws IllegalArgumentException unless {@code 0 <= v < V}
+     * @deprecated Replaced by {@link #nameOf(int)}.
+     */
+    std::string name(int v) const { 
+        validateVertex(v);
+        return keys_[v];
+    }
+    /**
+     * Returns the name of the vertex associated with the integer {@code v}.
+     * @param  v the integer corresponding to a vertex (between 0 and <em>V</em> - 1) 
+     * @return the name of the vertex associated with the integer {@code v}
+     * @throws IllegalArgumentException unless {@code 0 <= v < V}
+     */
+    std::string nameOf(int v) const {
+        validateVertex(v);
+        return keys_[v];
+    }
 
-  /**
-   * Returns the digraph assoicated with the symbol graph. It is the client's responsibility
-   * not to mutate the digraph.
-   *
-   * @return the digraph associated with the symbol digraph
-   * @deprecated Replaced by {@link #digraph()}.
-   */
-  Digraph* G() const { return _graph; }
-  /**
-   * Returns the digraph assoicated with the symbol graph. It is the client's responsibility
-   * not to mutate the digraph.
-   *
-   * @return the digraph associated with the symbol digraph
-   */
-  Digraph* digraph() const { return _graph; }
- private:
-  // throw an IllegalArgumentException unless {@code 0 <= v < V}
-  void validateVertex(int v) const;
+    /**
+     * Returns the digraph assoicated with the symbol graph. It is the client's responsibility
+     * not to mutate the digraph.
+     *
+     * @return the digraph associated with the symbol digraph
+     * @deprecated Replaced by {@link #digraph()}.
+     */
+    Digraph* G() const { return graph_; }
+    /**
+     * Returns the digraph assoicated with the symbol graph. It is the client's responsibility
+     * not to mutate the digraph.
+     *
+     * @return the digraph associated with the symbol digraph
+     */
+    Digraph* digraph() const { return graph_; }
+private:
+    // throw an IllegalArgumentException unless {@code 0 <= v < V}
+    void validateVertex(int v) const;
 
- private:
-  std::map<std::string, int> _vertex;  // string -> index
-  std::vector<std::string> _keys;           // index  -> string
-  Digraph* _graph;           // the underlying digraph
+private:
+    std::map<std::string, int> vertex_;  // string -> index
+    std::vector<std::string> keys_;           // index  -> string
+    Digraph* graph_;           // the underlying digraph
 };

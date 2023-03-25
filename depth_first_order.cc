@@ -1,8 +1,8 @@
 /******************************************************************************
- *  Compilation:  clang++ -c -O2 digraph.cc -std=c++11
- *                clang++ -c -O2 directed_edge.cc -std=c++11
- *                clang++ -c -O2 edge_weighted_digraph.cc -std=c++11
- *                clang++ -O2 -DDebug depth_first_order.cc digraph.o edge_weighted_digraph.o directed_edge.o -std=c++11 -o depth_first_order
+ *  Compilation:  clang++ -c -O2 digraph.cc -std=c++20
+ *                clang++ -c -O2 directed_edge.cc -std=c++20
+ *                clang++ -c -O2 edge_weighted_digraph.cc -std=c++20
+ *                clang++ -O2 -DDebug depth_first_order.cc digraph.o edge_weighted_digraph.o directed_edge.o -std=c++20 -o depth_first_order
  *  Execution:    ./depth_first_order digraph.txt
  *  Dependencies: digraph.h
  *                edge_weighted_digraph.h directed_edge.h
