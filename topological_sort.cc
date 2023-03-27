@@ -16,7 +16,7 @@
  *  Compute topological ordering of a DAG or edge-weighted DAG.
  *  Runs in O(E + V) time.
  *
- *  % java Topological jobs.txt "/"
+ *  % ./topological_sort jobs.txt "/"
  *  Calculus
  *  Linear Algebra
  *  Introduction to CS

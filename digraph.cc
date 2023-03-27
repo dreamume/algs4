@@ -9,7 +9,7 @@
  *  A graph, implemented using an array of lists.
  *  Parallel edges and self-loops are permitted.
  *
- *  % java Digraph tinyDG.txt
+ *  % ./digraph tinyDG.txt
  *  13 vertices, 22 edges
  *  0: 5 1 
  *  1: 
