@@ -1,5 +1,5 @@
-#ifndef DIRECTED_DFS
-#define DIRECTED_DFS
+#ifndef DIRECTED_DFS_
+#define DIRECTED_DFS_
 
 #include "digraph.h"
 
@@ -40,8 +40,8 @@ public:
      * @return {@code true} if there is a directed path, {@code false} otherwise
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    bool marked(int v) const {
-        validateVertex(v);
+    bool Marked(int v) const {
+        ValidateVertex(v);
         return marked_[v];
     }
 
@@ -56,17 +56,17 @@ public:
     }
 
 private:
-    void dfs(const Digraph& G, int v);
+    void Dfs(const Digraph& G, int v);
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
-    void validateVertex(int v) const;
+    void ValidateVertex(int v) const;
 
     // throw an IllegalArgumentException if vertices is null, has zero vertices,
     // or has a vertex not between 0 and V-1
-    void validateVertices(const std::vector<int>& vertices) const;
+    void ValidateVertices(const std::vector<int>& vertices) const;
 private:
     std::vector<bool> marked_;  // marked_[v] = true iff v is reachable from source(s)
     int count_{0};         // number of vertices reachable from source(s)
 };
 
-#endif
+#endif  // DIRECTED_DFS_

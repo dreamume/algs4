@@ -1,5 +1,5 @@
-#ifndef DEPTH_FIRST_ORDER_H
-#define DEPTH_FIRST_ORDER_H
+#ifndef DEPTH_FIRST_ORDER_H_
+#define DEPTH_FIRST_ORDER_H_
 
 #include <vector>
 #include <queue>
@@ -74,4 +74,4 @@ private:
 };
 
 
-#endif
+#endif  // DEPTH_FIRST_ORDER_H_

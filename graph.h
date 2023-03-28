@@ -1,5 +1,5 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#ifndef GRAPH_H_
+#define GRAPH_H_
 
 #include <vector>
 #include <string>
@@ -90,4 +90,4 @@ private:
     std::vector<std::vector<int>> adj_;
 };
 
-#endif
+#endif  // GRAPH_H_

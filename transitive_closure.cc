@@ -1,7 +1,9 @@
 /******************************************************************************
- *  Compilation:  javac TransitiveClosure.java
- *  Execution:    java TransitiveClosure filename.txt
- *  Dependencies: Digraph.java DepthFirstDirectedPaths.java In.java StdOut.java
+ *  Compilation:  clang++ -c -O2 digraph.cc -std=c++20
+ *                clang++ -c -O2 directed_dfs.cc -std=c++20
+ *                clang++ -DDebug -O2 transitive_closure.cc directed_dfs.o digraph.o -std=c++20 -o transitive_closure
+ *  Execution:    ./transitive_closure filename.txt
+ *  Dependencies: digraph.cc directed_dfs.cc
  *  Data files:   https://algs4.cs.princeton.edu/42digraph/tinyDG.txt
  *
  *  Compute transitive closure of a digraph and support
@@ -11,7 +13,7 @@
  *  Query time: O(1).
  *  Space: O(V^2).
  *
- *  % java TransitiveClosure tinyDG.txt
+ *  % ./transitive_closure tinyDG.txt
  *         0  1  2  3  4  5  6  7  8  9 10 11 12
  *  --------------------------------------------
  *    0:   T  T  T  T  T  T
@@ -53,3 +55,68 @@
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
+
+#include "transitive_closure.h"
+
+#include <exception>
+#include <string>
+
+using std::vector;
+using std::to_string;
+
+TransitiveClosure::TransitiveClosure(const Digraph& G) : tc_(G.V()) {
+  for (int v = 0; v < G.V(); v++)
+    tc_[v] = new DirectedDFS(G, v);
+}
+
+bool TransitiveClosure::Reachable(int v, int w) {
+  ValidateVertex(v);
+  ValidateVertex(w);
+  return tc_[v]->Marked(w);
+}
+
+void TransitiveClosure::ValidateVertex(int v) {
+  int V = tc_.size();
+  if (v < 0 || v >= V)
+    throw std::invalid_argument("vertex " + to_string(v) + " is not between 0 and " + to_string(V-1));
+}
+
+/**
+ * Unit tests the {@code TransitiveClosure} data type.
+ *
+ * @param args the command-line arguments
+ */
+#ifdef Debug
+#include <iostream>
+#include <cstdlib>
+int main(int argc, char *argv[]) {
+  std::fstream in(argv[1]);
+  if (!in.is_open()) {
+    std::cout << "failed to open " << argv[1] << '\n';
+    return 1;
+  }
+
+  Digraph G(in);
+
+  TransitiveClosure tc(G);
+
+  // print header
+  std::cout << "     ";
+  for (int v = 0; v < G.V(); v++)
+    std::cout << v;
+  std::cout << std::endl;
+  std::cout << "--------------------------------------------" << std::endl;
+
+  // print transitive closure
+  for (int v = 0; v < G.V(); v++) {
+    std::cout << v;
+    for (int w = 0; w < G.V(); w++) {
+      if (tc.Reachable(v, w)) std::cout << "  T";
+      else                    std::cout << "   ";
+    }
+    std::cout << std::endl;
+  }
+
+  return 0;
+}
+#endif
