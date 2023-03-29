@@ -61,6 +61,8 @@
 #include <exception>
 #include <string>
 
+#include "directed_dfs.h"
+
 using std::vector;
 using std::to_string;
 
@@ -69,13 +71,13 @@ TransitiveClosure::TransitiveClosure(const Digraph& G) : tc_(G.V()) {
     tc_[v] = new DirectedDFS(G, v);
 }
 
-bool TransitiveClosure::Reachable(int v, int w) {
+bool TransitiveClosure::Reachable(int v, int w) const {
   ValidateVertex(v);
   ValidateVertex(w);
   return tc_[v]->Marked(w);
 }
 
-void TransitiveClosure::ValidateVertex(int v) {
+void TransitiveClosure::ValidateVertex(int v) const {
   int V = tc_.size();
   if (v < 0 || v >= V)
     throw std::invalid_argument("vertex " + to_string(v) + " is not between 0 and " + to_string(V-1));

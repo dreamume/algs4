@@ -76,7 +76,7 @@ public:
      * @return the directed edges incident from vertex {@code v} as an Iterable
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    const std::vector<DirectedEdge *>& adj(int v) const;
+    const std::vector<DirectedEdge *>& Adj(int v) const;
     /**
      * Returns the number of directed edges incident from vertex {@code v}.
      * This is known as the <em>outdegree</em> of vertex {@code v}.
@@ -107,7 +107,7 @@ public:
      * Returns a string representation of this edge-weighted digraph.
      *
      * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
-     *         followed by the <em>V</em> adjacency lists of edges
+     *         followed by the <em>V</em> Adjacency lists of edges
      */
     std::string toString() const;
 

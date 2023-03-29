@@ -137,7 +137,7 @@ EdgeWeightedDigraph::EdgeWeightedDigraph(const EdgeWeightedDigraph& G) noexcept 
     for (int v = 0; v < G.V(); v++)
         indegree_[v] = G.indegree(v);
     for (int v = 0; v < G.V(); v++)
-        adj_[v] = G.adj(v);
+        adj_[v] = G.Adj(v);
 }
 
   // throw an IllegalArgumentException unless {@code 0 <= v < V}
@@ -171,7 +171,7 @@ void EdgeWeightedDigraph::addEdge(DirectedEdge* e) {
  * @return the directed edges incident from vertex {@code v} as an Iterable
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
-const vector<DirectedEdge *>& EdgeWeightedDigraph::adj(int v) const {
+const vector<DirectedEdge *>& EdgeWeightedDigraph::Adj(int v) const {
     validateVertex(v);
     return adj_[v];
 }
@@ -212,7 +212,7 @@ int EdgeWeightedDigraph::indegree(int v) const {
 vector<DirectedEdge *> EdgeWeightedDigraph::edges() const {
     vector<DirectedEdge *> list;
     for (int v = 0; v < v_; v++)
-        for (DirectedEdge* e : adj(v))
+        for (DirectedEdge* e : Adj(v))
             list.push_back(e);
 
     return list;

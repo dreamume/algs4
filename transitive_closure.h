@@ -3,7 +3,9 @@
 
 #include <vector>
 
-#include "directed_dfs.h"
+#include "digraph.h"
+
+class DirectedDFS;
 
 class TransitiveClosure {
 public:
@@ -26,13 +28,13 @@ public:
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    * @throws IllegalArgumentException unless {@code 0 <= w < V}
    */
-  bool Reachable(int v, int w);
+  bool Reachable(int v, int w) const;
 private:
   // throw an IllegalArgumentException unless {@code 0 <= v < V}
-  void ValidateVertex(int v);
+  void ValidateVertex(int v) const;
 
 private:
-  std::vector<DirectedDFS*> tc_;  // tc[v] = Reachable from v
+  std::vector<DirectedDFS *> tc_;  // tc[v] = Reachable from v
 };
 
 #endif

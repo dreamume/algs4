@@ -98,7 +98,7 @@ void DepthFirstOrder::dfs(const Digraph& G, int v) {
     marked_[v] = true;
     pre_[v] = pre_counter_++;
     preorder_.push(v);
-    for (int w : G.adj(v))
+    for (int w : G.Adj(v))
         if (!marked_[w]) dfs(G, w);
     postorder_.push(v);
     post_[v] = post_counter_++;
@@ -109,7 +109,7 @@ void DepthFirstOrder::dfs(const EdgeWeightedDigraph& G, int v) {
     marked_[v] = true;
     pre_[v] = pre_counter_++;
     preorder_.push(v);
-    for (DirectedEdge* e : G.adj(v)) {
+    for (DirectedEdge* e : G.Adj(v)) {
         int w = e->to();
         if (!marked_[w]) dfs(G, w);
     }
