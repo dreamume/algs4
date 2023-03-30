@@ -3,9 +3,9 @@
  *                clang++ -g -DDebug edge_weighted_digraph.cc directed_edge.o -std=c++20 -o edge_weighted_digraph
  *  Execution:    ./edge_weighted_digraph input.txt
  *  Dependencies: directed_edge.h
- *  Data files:   https://algs4.cs.princeton.edu/44st/tinyEWD.txt
- *                https://algs4.cs.princeton.edu/44st/mediumEWD.txt
- *                https://algs4.cs.princeton.edu/44st/largeEWD.txt
+ *  Data files:   https://algs4.cs.princeton.edu/44st/tinyEWG.txt
+ *                https://algs4.cs.princeton.edu/44st/mediumEWG.txt
+ *                https://algs4.cs.princeton.edu/44st/largeEWG.txt
  *
  *  An edge-weighted digraph, implemented using adjacency lists.
  *
@@ -57,8 +57,8 @@ using std::unordered_set;
  */
 EdgeWeightedDigraph::EdgeWeightedDigraph(int V) noexcept: v_(V), e_(0), adj_(V), 
                                                           indegree_(V), gen_(rd_()) {
-    assert(V > 0);
-//        throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
+  assert(V > 0);
+  //        throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
 }
 
 /**
@@ -70,17 +70,17 @@ EdgeWeightedDigraph::EdgeWeightedDigraph(int V) noexcept: v_(V), e_(0), adj_(V),
  * @throws IllegalArgumentException if {@code E < 0}
  */
 EdgeWeightedDigraph::EdgeWeightedDigraph(int V, int E) noexcept: EdgeWeightedDigraph(V) {
-    assert (E < 0);
-//        throw std::invalid_argument("Number of edges in a Digraph must be nonnegative");
-    std::uniform_int_distribution<> dis(0, V - 1); 
-    std::uniform_int_distribution<> dis100(0, 100 - 1); 
-    for (int i = 0; i < E; i++) {
-        int v = dis(gen_);
-        int w = dis(gen_);
-        double weight = 0.01 * dis100(gen_);
-        DirectedEdge* e = new DirectedEdge(v, w, weight);
-        addEdge(e);
-    }
+  assert (E < 0);
+  //        throw std::invalid_argument("Number of edges in a Digraph must be nonnegative");
+  std::uniform_int_distribution<> dis(0, V - 1); 
+  std::uniform_int_distribution<> dis100(0, 100 - 1); 
+  for (int i = 0; i < E; i++) {
+    int v = dis(gen_);
+    int w = dis(gen_);
+    double weight = 0.01 * dis100(gen_);
+    DirectedEdge* e = new DirectedEdge(v, w, weight);
+    AddEdge(e);
+  }
 }
 
 /**  
@@ -95,35 +95,35 @@ EdgeWeightedDigraph::EdgeWeightedDigraph(int V, int E) noexcept: EdgeWeightedDig
  * @throws IllegalArgumentException if the number of vertices or edges is negative
  */
 EdgeWeightedDigraph::EdgeWeightedDigraph(fstream& in): gen_(rd_()) {
-    string line;
-    getline(in, line);
-    v_ = stoi(line);
-    e_ = 0;
+  string line;
+  getline(in, line);
+  v_ = stoi(line);
+  e_ = 0;
 
-    if (v_ < 0) 
-        throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
+  if (v_ < 0) 
+    throw std::invalid_argument("Number of vertices in a Digraph must be nonnegative");
 
-    getline(in, line);
-    int E = stoi(line);
-    if (E < 0) throw std::invalid_argument("Number of edges must be nonnegative");
+  getline(in, line);
+  int E = stoi(line);
+  if (E < 0) throw std::invalid_argument("Number of edges must be nonnegative");
 
-    indegree_.resize(v_);
-    adj_.resize(v_);
+  indegree_.resize(v_);
+  adj_.resize(v_);
 		
-    for (int i = 0; i < E; i++) {
-        std::getline(in, line);
-        const char* str = line.c_str();
-        char *end;
-        int v = std::strtol(str, &end, 10);
-        str = end;
-        int w = std::strtol(str, &end, 10);
-        validateVertex(v);
-        validateVertex(w);
+  for (int i = 0; i < E; i++) {
+    std::getline(in, line);
+    const char* str = line.c_str();
+    char *end;
+    int v = std::strtol(str, &end, 10);
+    str = end;
+    int w = std::strtol(str, &end, 10);
+    ValidateVertex(v);
+    ValidateVertex(w);
 
-        str = end;
-        double weight = std::strtod(str, &end);
-        addEdge(new DirectedEdge(v, w, weight));
-    }
+    str = end;
+    double weight = std::strtod(str, &end);
+    AddEdge(new DirectedEdge(v, w, weight));
+  }
 }
 
 /**
@@ -133,15 +133,15 @@ EdgeWeightedDigraph::EdgeWeightedDigraph(fstream& in): gen_(rd_()) {
  */
 EdgeWeightedDigraph::EdgeWeightedDigraph(const EdgeWeightedDigraph& G) noexcept : 
   EdgeWeightedDigraph(G.V()) {
-    e_ = G.E();
-    for (int v = 0; v < G.V(); v++)
-        indegree_[v] = G.indegree(v);
-    for (int v = 0; v < G.V(); v++)
-        adj_[v] = G.Adj(v);
+  e_ = G.E();
+  for (int v = 0; v < G.V(); v++)
+    indegree_[v] = G.indegree(v);
+  for (int v = 0; v < G.V(); v++)
+    adj_[v] = G.Adj(v);
 }
 
   // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void EdgeWeightedDigraph::validateVertex(int v) const {
+void EdgeWeightedDigraph::ValidateVertex(int v) const {
     if (v < 0 || v >= v_)
         throw std::invalid_argument("vertex " + std::to_string(v) + 
                                     " is not between 0 and " + std::to_string(v_-1));
@@ -154,14 +154,14 @@ void EdgeWeightedDigraph::validateVertex(int v) const {
  * @throws IllegalArgumentException unless endpoints of edge are between {@code 0}
  *         and {@code V-1}
  */
-void EdgeWeightedDigraph::addEdge(DirectedEdge* e) {
-    int v = e->from();
-    int w = e->to();
-    validateVertex(v);
-    validateVertex(w);
-    adj_[v].push_back(e);
-    ++indegree_[w];
-    ++e_;
+void EdgeWeightedDigraph::AddEdge(DirectedEdge* e) {
+  int v = e->from();
+  int w = e->to();
+  ValidateVertex(v);
+  ValidateVertex(w);
+  adj_[v].push_back(e);
+  ++indegree_[w];
+  ++e_;
 }
 
 /**
@@ -172,7 +172,7 @@ void EdgeWeightedDigraph::addEdge(DirectedEdge* e) {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 const vector<DirectedEdge *>& EdgeWeightedDigraph::Adj(int v) const {
-    validateVertex(v);
+    ValidateVertex(v);
     return adj_[v];
 }
 
@@ -185,8 +185,8 @@ const vector<DirectedEdge *>& EdgeWeightedDigraph::Adj(int v) const {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int EdgeWeightedDigraph::outdegree(int v) const {
-    validateVertex(v);
-    return adj_[v].size();
+  ValidateVertex(v);
+  return adj_[v].size();
 }
 
 /**
@@ -198,8 +198,8 @@ int EdgeWeightedDigraph::outdegree(int v) const {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int EdgeWeightedDigraph::indegree(int v) const {
-    validateVertex(v);
-    return indegree_[v];
+  ValidateVertex(v);
+  return indegree_[v];
 }
 
 /**
@@ -210,12 +210,12 @@ int EdgeWeightedDigraph::indegree(int v) const {
  * @return all edges in this edge-weighted digraph, as an iterable
  */
 vector<DirectedEdge *> EdgeWeightedDigraph::edges() const {
-    vector<DirectedEdge *> list;
-    for (int v = 0; v < v_; v++)
-        for (DirectedEdge* e : Adj(v))
-            list.push_back(e);
+  vector<DirectedEdge *> list;
+  for (int v = 0; v < v_; v++)
+    for (DirectedEdge* e : Adj(v))
+      list.push_back(e);
 
-    return list;
+  return list;
 } 
 
 /**
@@ -224,15 +224,15 @@ vector<DirectedEdge *> EdgeWeightedDigraph::edges() const {
  * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
  *         followed by the <em>V</em> adjacency lists of edges
  */
-string EdgeWeightedDigraph::toString() const {
-    string s = std::to_string(v_) + " " + std::to_string(e_) + "\n";
-    for (int v = 0; v < v_; v++) {
-        s += std::to_string(v) + ": ";
-        for (DirectedEdge* e : adj_[v]) s += e->toString() + "  ";
-        s += "\n";
-    }
+string EdgeWeightedDigraph::ToString() const {
+  string s = std::to_string(v_) + " " + std::to_string(e_) + "\n";
+  for (int v = 0; v < v_; v++) {
+    s += std::to_string(v) + ": ";
+    for (DirectedEdge* e : adj_[v]) s += e->ToString() + "  ";
+    s += "\n";
+  }
 
-    return s;
+  return s;
 }
 
 /**
@@ -242,10 +242,10 @@ string EdgeWeightedDigraph::toString() const {
  */
 #ifdef Debug
 int main(int args, char *argv[]) {
-    fstream in(argv[1]);
-    EdgeWeightedDigraph G(in);
-    printf("%s\n", G.toString().c_str());
+  fstream in(argv[1]);
+  EdgeWeightedDigraph G(in);
+  printf("%s\n", G.ToString().c_str());
 
-    return 0;
+  return 0;
 }
 #endif

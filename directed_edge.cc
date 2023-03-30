@@ -43,22 +43,22 @@ using std::string;
  *    is a negative integer
  * @throws IllegalArgumentException if {@code weight} is {@code NaN}
  */
-DirectedEdge::DirectedEdge(int v, int w, double weight) noexcept: _v(v), _w(w), _weight(weight) {
-    assert (v >= 0);
-//        throw std::invalid_argument("Vertex names must be nonnegative integers");
-    assert (w >= 0);
-//        throw std::invalid_argument("Vertex names must be nonnegative integers");
-    assert (weight != std::numeric_limits<double>::quiet_NaN());
-//        throw std::invalid_argument("Weight is NaN");
+DirectedEdge::DirectedEdge(int v, int w, double weight) noexcept: v_(v), w_(w), weight_(weight) {
+  assert (v >= 0);
+  //        throw std::invalid_argument("Vertex names must be nonnegative integers");
+  assert (w >= 0);
+  //        throw std::invalid_argument("Vertex names must be nonnegative integers");
+  assert (weight != std::numeric_limits<double>::quiet_NaN());
+  //        throw std::invalid_argument("Weight is NaN");
 }
 
 /**
  * Returns a string representation of the directed edge.
  * @return a string representation of the directed edge
  */
-string DirectedEdge::toString() const {
-    return std::to_string(_v) + "->" + std::to_string(_w) + " " + 
-        std::to_string(_weight);
+string DirectedEdge::ToString() const {
+  return std::to_string(v_) + "->" + std::to_string(w_) + " " + 
+    std::to_string(weight_);
 }
 
 /**
@@ -69,6 +69,6 @@ string DirectedEdge::toString() const {
 #ifdef Debug
 int main(int argc, char* argv[]) {
     DirectedEdge e(12, 34, 5.67);
-    printf("%s\n", e.toString().c_str());
+    printf("%s\n", e.ToString().c_str());
 }
 #endif
