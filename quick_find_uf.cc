@@ -73,27 +73,6 @@
 
 using std::fstream;
 
-#endif
-
-void QuickFindUF::validate(int p) {
-  if (p < 0 || p >= _id.size())
-	throw std::invalid_argument("invalid id index!");
-}
-
-void QuickFindUF::unionWith(int p, int q) {
-  validate(p);
-  validate(q);
-  int pID = _id[p];   // needed for correctness
-  int qID = _id[q];   // to reduce the number of array accesses
-
-  // p and q are already in the same component
-  if (pID == qID) return;
-
-  for (int i = 0; i < _id.size(); i++)
-    if (_id[i] == pID) _id[i] = qID;
-  _count--;
-}
-
 /**
  * Reads an integer {@code n} and a sequence of pairs of integers
  * (between {@code 0} and {@code n-1}) from standard input, where each integer
@@ -103,7 +82,6 @@ void QuickFindUF::unionWith(int p, int q) {
  * 
  * @param args the command-line arguments
  */
-#ifdef Debug
 int main(int args, char *argv[]) {
   fstream in(argv[1]);
   if (!in.is_open()) {

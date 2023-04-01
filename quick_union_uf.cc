@@ -62,8 +62,6 @@
 
 #include "quick_union_uf.h"
 
-#include <exception>
-
 #ifdef Debug
 #include <iostream>
 #include <sstream>
@@ -72,31 +70,6 @@
 #include <fstream>
 
 using std::fstream;
-
-#endif
-
-template<typename T>
-void QuickUnionUF<T>::validate(T p) const {
-    if (p < 0 || p >= static_cast<T>(parent_.size()))
-        throw std::invalid_argument("invalid id index!");
-}
-
-template<typename T>
-void QuickUnionUF<T>::unionWith(T p, T q) {
-    T root_p = find(p);
-    T root_q = find(q);
-
-    if (root_p == root_q) return;
-
-    parent_[root_p] = root_q;
-    // if (rank_[root_p] < rank_[root_q]) {
-    //     parent_[root_p] = root_q;
-    // } else {
-    //     parent_[root_q] = root_p;
-    //     if (rank_[root_p] == rank_[root_q]) ++rank_[root_p];
-    // }
-    --count_;
-}
 
 /**
  * Reads an integer {@code n} and a sequence of pairs of integers
@@ -107,34 +80,33 @@ void QuickUnionUF<T>::unionWith(T p, T q) {
  * 
  * @param args the command-line arguments
  */
-#ifdef Debug
 int main(int args, char *argv[]) {
-    fstream in(argv[1]);
-    if (!in.is_open()) {
-        std::cout << "failed to open " << argv[1] << '\n';
-        return 1;
-    }
+  fstream in(argv[1]);
+  if (!in.is_open()) {
+    std::cout << "failed to open " << argv[1] << '\n';
+    return 1;
+  }
 
-    std::string line;
+  std::string line;
+  std::getline(in, line);
+  int n = stoi(line);
+
+  QuickUnionUF<int> uf(n);
+  while (!in.eof()) {
     std::getline(in, line);
-    int n = stoi(line);
-
-    QuickUnionUF<int> uf(n);
-    while (!in.eof()) {
-        std::getline(in, line);
-        std::stringstream ss(line);
-        std::istream_iterator<std::string> begin(ss);
-        std::istream_iterator<std::string> end;
-        std::vector<std::string> vstrings(begin, end);
-        if (vstrings.size() < 2) break;
-        int p = stoi(vstrings[0]);
-        int q = stoi(vstrings[1]);
+    std::stringstream ss(line);
+    std::istream_iterator<std::string> begin(ss);
+    std::istream_iterator<std::string> end;
+    std::vector<std::string> vstrings(begin, end);
+    if (vstrings.size() < 2) break;
+    int p = stoi(vstrings[0]);
+    int q = stoi(vstrings[1]);
     
-        if (uf.find(p) == uf.find(q)) continue;
-        uf.unionWith(p, q);
-        //printf("%d %d", p, q);
-    } //while (!std::cin.fail() || !std::cin.eof());
-    printf("%d components\n", uf.count());
+    if (uf.Find(p) == uf.Find(q)) continue;
+    uf.UnionWith(p, q);
+    //printf("%d %d", p, q);
+  } //while (!std::cin.fail() || !std::cin.eof());
+  printf("%d components\n", uf.count());
 }
 #endif
 

@@ -2,6 +2,7 @@
 #define QUICK_FIND_UF_H
 
 #include <vector>
+#include <exception>
 
 class QuickFindUF {
  public:
@@ -32,7 +33,7 @@ class QuickFindUF {
      * @throws IllegalArgumentException unless {@code 0 <= p < n}
      */
   int find(int p) {
-    validate(p);
+    Validate(p);
     return _id[p];
   }
 
@@ -48,8 +49,8 @@ class QuickFindUF {
      * @deprecated Replace with two calls to {@link #find(int)}.
      */
   bool connected(int p, int q) {
-    validate(p);
-    validate(q);
+    Validate(p);
+    Validate(q);
     return _id[p] == _id[q];
   }
 
@@ -62,10 +63,25 @@ class QuickFindUF {
      * @throws IllegalArgumentException unless
      *         both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
-  void unionWith(int p, int q);
+  void unionWith(int p, int q) {
+    Validate(p);
+    Validate(q);
+    int pID = _id[p];   // needed for correctness
+    int qID = _id[q];   // to reduce the number of array accesses
+
+    // p and q are already in the same component
+    if (pID == qID) return;
+
+    for (int i = 0; i < _id.size(); i++)
+      if (_id[i] == pID) _id[i] = qID;
+    _count--;
+  }
  private:
-  // validate that p is a valid index
-  void validate(int p);
+  // Validate that p is a valid index
+  void Validate(int p) const {
+    if (p < 0 || p >= _id.size())
+      throw std::invalid_argument("invalid id index!");
+  }
 
  private:
   std::vector<int> _id;              /* _id[i] = component identifier of i */

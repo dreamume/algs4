@@ -81,6 +81,10 @@ public:
    * @param  G the edge-weighted graph to copy
    */
   EdgeWeightedGraph(const EdgeWeightedGraph& G) noexcept;
+  EdgeWeightedGraph() = delete;
+  EdgeWeightedGraph &operator=(const EdgeWeightedGraph& other) = delete;
+  EdgeWeightedGraph(EdgeWeightedGraph&& other) = delete;
+  EdgeWeightedGraph &operator=(EdgeWeightedGraph&& other) = delete;
 
   /**
    * Returns the number of vertices in this edge-weighted graph.

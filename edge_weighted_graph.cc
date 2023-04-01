@@ -1,7 +1,8 @@
 /******************************************************************************
- *  Compilation:  javac EdgeWeightedGraph.java
- *  Execution:    java EdgeWeightedGraph filename.txt
- *  Dependencies: Bag.java Edge.java In.java StdOut.java
+ *  Compilation:  clang++ -c -O2 edge.cc -std=c++20
+ *                clang++ -DDebug -O2 edge.o edge_weighted_graph.cc -std=c++20 -o edge_weighted_graph
+ *  Execution:    ./edge_weighted_graph filename.txt
+ *  Dependencies: edge.cc
  *  Data files:   https://algs4.cs.princeton.edu/43mst/tinyEWG.txt
  *                https://algs4.cs.princeton.edu/43mst/mediumEWG.txt
  *                https://algs4.cs.princeton.edu/43mst/largeEWG.txt
@@ -9,7 +10,7 @@
  *  An edge-weighted undirected graph, implemented using adjacency lists.
  *  Parallel edges and self-loops are permitted.
  *
- *  % java EdgeWeightedGraph tinyEWG.txt
+ *  % ./edge_weighted_graph tinyEWG.txt
  *  8 16
  *  0: 6-0 0.58000  0-2 0.26000  0-4 0.38000  0-7 0.16000
  *  1: 1-3 0.29000  1-2 0.36000  1-7 0.19000  1-5 0.32000
