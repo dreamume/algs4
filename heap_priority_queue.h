@@ -5,6 +5,7 @@
 #include <cassert>
 #include <exception>
 
+namespace algs4 {
 template<class Key, class Cmp = std::greater<Key>>
 class HeapPriorityQueue {
 public:
@@ -84,5 +85,6 @@ private:
   size_t n_{0};
   Cmp cmp_{};
 };
+}
 
 #endif  // HEAP_PRIORITY_QUEUE_

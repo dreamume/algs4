@@ -18,6 +18,7 @@
  *  @author Kevin Wayne
  */
 
+namespace algs4 {
 class Edge {
 public:
   /**
@@ -76,5 +77,6 @@ private:
 };
 
 bool operator<(const Edge& left, const Edge& right);
+}
 
 #endif  // EDGE_H_

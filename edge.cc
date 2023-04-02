@@ -14,6 +14,8 @@
 using std::string;
 using std::to_string;
 
+namespace algs4 {
+
 bool operator<(const Edge& left, const Edge& right) {
   return left.weight() < right.weight();
 }
@@ -27,6 +29,7 @@ int Edge::other(int vertex) const {
 string Edge::ToString() const {
   return to_string(v_) + '-' + to_string(w_) + ' ' + to_string(weight_);
 }
+}
 
 /**
  * Unit tests the {@code Edge} data type.
@@ -35,13 +38,14 @@ string Edge::ToString() const {
  */
 #ifdef Debug
 #include <iostream>
+using namespace algs4;
 int main(int argc, char *argv[]) {
-    Edge e(12, 34, 5.67);
-    Edge f(13, 35, 5.68);
+  Edge e(12, 34, 5.67);
+  Edge f(13, 35, 5.68);
 
-    std::cout << e.ToString() << " compare " << f.ToString() << " is " << 
-      (e < f) << std::endl;
+  std::cout << e.ToString() << " compare " << f.ToString() << " is " << 
+    (e < f) << std::endl;
 
-    return 0;
+  return 0;
 }
 #endif

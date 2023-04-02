@@ -5,8 +5,6 @@
 #include <vector>
 #include <string>
 
-class Edge;
-
 /**
  *  The {@code EdgeWeightedGraph} class represents an edge-weighted
  *  graph of vertices named 0 through <em>V</em> – 1, where each
@@ -39,6 +37,10 @@ class Edge;
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
+namespace algs4 {
+
+class Edge;
+
 class EdgeWeightedGraph {
 public:
   static constexpr char* NEWLINE = "\n";
@@ -158,5 +160,6 @@ private:
   int E_{0};
   std::vector<std::list<Edge *>> adj_;
 };
+}
 
 #endif  // EDGE_WEIGHTED_GRAPH_H_

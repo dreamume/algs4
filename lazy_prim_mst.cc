@@ -2,7 +2,7 @@
  *  Compilation:  clang++ -c -O2 edge.cc -std=c++20
  *                clang++ -DDebug -O2 edge.o lazy_prim_mst.cc -std=c++20 -o lazy_prim_mst
  *  Execution:    ./lazy_prim_mst filename.txt
- *  Dependencies: edge.cc quick_union_uf.cc heap_priority_queue.cc
+ *  Dependencies: edge.cc
  *  Data files:   https://algs4.cs.princeton.edu/43mst/tinyEWG.txt
  *                https://algs4.cs.princeton.edu/43mst/mediumEWG.txt
  *                https://algs4.cs.princeton.edu/43mst/largeEWG.txt
@@ -51,6 +51,7 @@ using std::vector;
 using std::cerr;
 using std::endl;
 
+namespace algs4 {
 LazyPrimMST::LazyPrimMST(const EdgeWeightedGraph& G) noexcept : marked_(G.V()) {
   for (int v = 0; v < G.V(); v++)     // run Prim from all vertices to
     if (!marked_[v]) Prim(G, v);     // get a minimum spanning forest
@@ -151,6 +152,7 @@ bool LazyPrimMST::Check(const EdgeWeightedGraph& G) {
 
   return true;
 }
+}
 
 /**
  * Unit tests the {@code LazyPrimMST} data type.
@@ -160,6 +162,7 @@ bool LazyPrimMST::Check(const EdgeWeightedGraph& G) {
 #ifdef Debug
 #include <fstream>
 using std::fstream;
+using namespace algs4;
 int main(int args, char *argv[]) {
   EdgeWeightedGraph G(argv[1]);
   LazyPrimMST mst(G);

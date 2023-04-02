@@ -8,6 +8,7 @@
 #include "edge_weighted_graph.h"
 #include "heap_priority_queue.h"
 
+namespace algs4 {
 class EdgeCompare {
 public:
   bool operator() (Edge* left, Edge* right) const {
@@ -88,5 +89,6 @@ private:
   std::vector<bool> marked_;    // marked[v] = true iff v on tree
   HeapPriorityQueue<Edge *, EdgeCompare> pq_;      // edges with one endpoint in tree
 };
+}
 
 #endif  /* LAZY_PRIM_MST_H_ */

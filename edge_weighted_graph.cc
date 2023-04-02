@@ -38,12 +38,13 @@ using std::stod;
 using std::list;
 using std::fstream;
 
+namespace algs4 {
 EdgeWeightedGraph::EdgeWeightedGraph(int V, int E) noexcept : EdgeWeightedGraph(V) {
   for (int i = 0; i < E; i++) {
     int v = random() % V;
     int w = random() % V;
     double weight = 0.01 * (random() % 101);
-    Edge* e = new Edge(v, w, weight);
+    algs4::Edge* e = new algs4::Edge(v, w, weight);
     AddEdge(e);
   }
 }
@@ -138,6 +139,7 @@ string EdgeWeightedGraph::ToString() const {
 
   return res;
 }
+}
 
 /**
  * Unit tests the {@code EdgeWeightedGraph} data type.
@@ -146,6 +148,7 @@ string EdgeWeightedGraph::ToString() const {
  */
 #ifdef Debug
 #include <iostream>
+using namespace algs4;
 int main(int argc, char *argv[]) {
   EdgeWeightedGraph G(argv[1]);
   std::cout << G.ToString() << std::endl;

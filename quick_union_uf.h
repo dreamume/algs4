@@ -5,6 +5,7 @@
 #include <numeric>
 #include <exception>
 
+namespace algs4 {
 template<typename T>
 class QuickUnionUF {
 public:
@@ -97,5 +98,6 @@ private:
   //std::vector<T> rank_;
   int count_;                   /* number of components */
 };
+}
 
 #endif  // QUICK_UNION_UF_H_
