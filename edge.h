@@ -2,6 +2,7 @@
 #define EDGE_H_
 
 #include <string>
+#include <compare>
 
 /**
  *  The {@code Edge} class represents a weighted edge in an
@@ -39,6 +40,7 @@ public:
   Edge(Edge&& other) = default;
   Edge &operator=(Edge&& other) = default;
 
+  [[nodiscard]] std::strong_ordering operator<=>(const Edge& other) const;
   /**
    * Returns the weight of this edge.
    *
@@ -75,8 +77,6 @@ private:
   int w_;
   double weight_;
 };
-
-bool operator<(const Edge& left, const Edge& right);
 }
 
 #endif  // EDGE_H_

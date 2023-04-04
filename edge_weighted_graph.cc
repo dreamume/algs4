@@ -44,7 +44,7 @@ EdgeWeightedGraph::EdgeWeightedGraph(int V, int E) noexcept : EdgeWeightedGraph(
     int v = random() % V;
     int w = random() % V;
     double weight = 0.01 * (random() % 101);
-    algs4::Edge* e = new algs4::Edge(v, w, weight);
+    Edge* e = new Edge(v, w, weight);
     AddEdge(e);
   }
 }

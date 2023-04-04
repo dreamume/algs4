@@ -9,6 +9,7 @@
 
 #include "edge.h"
 
+#include <cassert>
 #include <exception>
 
 using std::string;
@@ -16,8 +17,15 @@ using std::to_string;
 
 namespace algs4 {
 
-bool operator<(const Edge& left, const Edge& right) {
-  return left.weight() < right.weight();
+[[nodiscard]] std::strong_ordering Edge::operator<=>(const Edge& other) const {
+  //  return std::strong_order(weight_, other.weight());
+  //return compare_strong_order_fallback(weight_, other.weight());
+  auto cmp2 = weight_ <=> other.weight(); // might be partial_ordering for double
+// map partial_ordering to strong_ordering:
+  assert(cmp2 != std::partial_ordering::unordered); // RUNTIME ERROR if unordered 
+  return cmp2 == 0 ? std::strong_ordering::equal
+    : cmp2 > 0 ? std::strong_ordering::greater
+    : std::strong_ordering::less;
 }
 
 int Edge::other(int vertex) const {
