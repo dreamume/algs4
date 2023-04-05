@@ -1,12 +1,3 @@
-/******************************************************************************
- *  Compilation:  clang++ -g -DDebug directed_edge.cc -std=c++11 -o directed_edge
- *  Execution:    ./directed_edge
- *  Dependencies: 
- *
- *  Immutable weighted directed edge.
- *
- ******************************************************************************/
-
 /**
  *  The {@code DirectedEdge} class represents a weighted edge in an 
  *  {@link EdgeWeightedDigraph}. Each edge consists of two integers
@@ -26,6 +17,7 @@
 
 #include <string>
 
+namespace algs4 {
 class DirectedEdge {
 public:
   /**
@@ -69,5 +61,6 @@ private:
   int w_;
   double weight_;
 };
+}
 
 #endif  // DIRECTED_EDGE_H_

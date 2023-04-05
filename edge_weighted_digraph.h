@@ -6,6 +6,8 @@
 #include <fstream>
 #include <string>
 
+namespace algs4 {
+
 class DirectedEdge;
 
 class EdgeWeightedDigraph {
@@ -123,5 +125,6 @@ private:
   std::random_device rd_;
   std::mt19937 gen_;
 };
+}
 
 #endif  // EDGE_WEIGHTED_DIGRAPH_H_

@@ -7,20 +7,6 @@
  *
  ******************************************************************************/
 
-/**
- *  The {@code DirectedEdge} class represents a weighted edge in an 
- *  {@link EdgeWeightedDigraph}. Each edge consists of two integers
- *  (naming the two vertices) and a real-value weight. The data type
- *  provides methods for accessing the two endpoints of the directed edge and
- *  the weight.
- *  <p>
- *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/44sp">Section 4.4</a> of
- *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
- *
- *  @author Robert Sedgewick
- *  @author Kevin Wayne
- */
-
 #include "directed_edge.h"
 
 #include <cassert>
@@ -33,6 +19,7 @@
 
 using std::string;
 
+namespace algs4 {
 /**
  * Initializes a directed edge from vertex {@code v} to vertex {@code w} with
  * the given {@code weight}.
@@ -60,6 +47,7 @@ string DirectedEdge::ToString() const {
   return std::to_string(v_) + "->" + std::to_string(w_) + " " + 
     std::to_string(weight_);
 }
+}
 
 /**
  * Unit tests the {@code DirectedEdge} data type.
@@ -68,7 +56,7 @@ string DirectedEdge::ToString() const {
  */
 #ifdef Debug
 int main(int argc, char* argv[]) {
-    DirectedEdge e(12, 34, 5.67);
-    printf("%s\n", e.ToString().c_str());
+  DirectedEdge e(12, 34, 5.67);
+  printf("%s\n", e.ToString().c_str());
 }
 #endif

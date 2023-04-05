@@ -20,13 +20,13 @@ public:
   IndexMinPriorityQueue(IndexMinPriorityQueue&& other) = default;
   IndexMinPriorityQueue &operator=(IndexMinPriorityQueue&& other) = default;
 
-  bool isEmpty() const { return n_ == 0; }
+  bool IsEmpty() const { return n_ == 0; }
   bool Contains(int i) const {
     ValidateIndex(i);
     return qp_[i] != -1;
   }
 
-  int size() const { return n_; }
+  int Size() const { return n_; }
   void Insert(int i, Key key) {
     ValidateIndex(i);
     if (Contains(i)) 

@@ -49,6 +49,7 @@ using std::string;
 using std::fstream;
 using std::unordered_set;
 
+namespace algs4 {
 /**
  * Initializes an empty edge-weighted digraph with {@code V} vertices and 0 edges.
  *
@@ -233,6 +234,7 @@ string EdgeWeightedDigraph::ToString() const {
   }
 
   return s;
+}
 }
 
 /**

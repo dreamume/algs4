@@ -30,7 +30,7 @@ int main(int args, char *argv[]) {
     for (size_t i = 0; i < strings.size(); ++i)
         pq.Insert(static_cast<int>(i), strings[i]);
 
-    while (!pq.isEmpty()) {
+    while (!pq.IsEmpty()) {
         auto item = pq.DelMin();
         std::cout << item << ' ' << strings[item] << ' ';
     }
