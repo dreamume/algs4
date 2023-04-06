@@ -67,18 +67,19 @@ using std::queue;
 using std::vector;
 using std::stack;
 
+namespace algs4 {
 /**
  * Determines a depth-first order for the digraph {@code G}.
  * @param G the digraph
  */
 DepthFirstOrder::DepthFirstOrder(const Digraph& G) noexcept {
-    pre_.resize(G.V());
-    post_.resize(G.V());
-    marked_.resize(G.V());
-    for (int v = 0; v < G.V(); v++)
-        if (!marked_[v]) dfs(G, v);
+  pre_.resize(G.V());
+  post_.resize(G.V());
+  marked_.resize(G.V());
+  for (int v = 0; v < G.V(); v++)
+    if (!marked_[v]) Dfs(G, v);
 
-    assert(check());
+  assert(Check());
 }
 
 /**
@@ -86,35 +87,35 @@ DepthFirstOrder::DepthFirstOrder(const Digraph& G) noexcept {
  * @param G the edge-weighted digraph
  */
 DepthFirstOrder::DepthFirstOrder(const EdgeWeightedDigraph& G) noexcept {
-    pre_.resize(G.V());
-    post_.resize(G.V());
-    marked_.resize(G.V());
-    for (int v = 0; v < G.V(); v++)
-        if (!marked_[v]) dfs(G, v);
+  pre_.resize(G.V());
+  post_.resize(G.V());
+  marked_.resize(G.V());
+  for (int v = 0; v < G.V(); v++)
+    if (!marked_[v]) Dfs(G, v);
 }
 
 // run DFS in digraph G from vertex v and compute preorder/postorder
-void DepthFirstOrder::dfs(const Digraph& G, int v) {
-    marked_[v] = true;
-    pre_[v] = pre_counter_++;
-    preorder_.push(v);
-    for (int w : G.Adj(v))
-        if (!marked_[w]) dfs(G, w);
-    postorder_.push(v);
-    post_[v] = post_counter_++;
+void DepthFirstOrder::Dfs(const Digraph& G, int v) {
+  marked_[v] = true;
+  pre_[v] = pre_counter_++;
+  preorder_.push(v);
+  for (int w : G.Adj(v))
+    if (!marked_[w]) Dfs(G, w);
+  postorder_.push(v);
+  post_[v] = post_counter_++;
 }
 
 // run DFS in edge-weighted digraph G from vertex v and compute preorder/postorder
-void DepthFirstOrder::dfs(const EdgeWeightedDigraph& G, int v) {
-    marked_[v] = true;
-    pre_[v] = pre_counter_++;
-    preorder_.push(v);
-    for (DirectedEdge* e : G.Adj(v)) {
-        int w = e->to();
-        if (!marked_[w]) dfs(G, w);
-    }
-    postorder_.push(v);
-    post_[v] = post_counter_++;
+void DepthFirstOrder::Dfs(const EdgeWeightedDigraph& G, int v) {
+  marked_[v] = true;
+  pre_[v] = pre_counter_++;
+  preorder_.push(v);
+  for (DirectedEdge* e : G.Adj(v)) {
+    int w = e->to();
+    if (!marked_[w]) Dfs(G, w);
+  }
+  postorder_.push(v);
+  post_[v] = post_counter_++;
 }
 
 /**
@@ -124,8 +125,8 @@ void DepthFirstOrder::dfs(const EdgeWeightedDigraph& G, int v) {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int DepthFirstOrder::pre(int v) const {
-    validateVertex(v);
-    return pre_[v];
+  ValidateVertex(v);
+  return pre_[v];
 }
 
 /**
@@ -135,65 +136,66 @@ int DepthFirstOrder::pre(int v) const {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int DepthFirstOrder::post(int v) const {
-    validateVertex(v);
-    return post_[v];
+  ValidateVertex(v);
+  return post_[v];
 }
 
 /**
  * Returns the vertices in reverse postorder.
  * @return the vertices in reverse postorder, as an iterable of vertices
  */
-vector<int> DepthFirstOrder::reversePost() const {
-    // Stack<Integer> reverse = new Stack<Integer>();
-    // for (int v : postorder_)
-    // 	reverse.push(v);
-    // return reverse;
-    vector<int> reverse;
-    queue<int> post(postorder_);
-    while (!post.empty()) {
-        reverse.push_back(post.front());
-        post.pop();
-    }
-    std::reverse(reverse.begin(), reverse.end());
+vector<int> DepthFirstOrder::ReversePost() const {
+  // Stack<Integer> reverse = new Stack<Integer>();
+  // for (int v : postorder_)
+  // 	reverse.push(v);
+  // return reverse;
+  vector<int> reverse;
+  queue<int> post(postorder_);
+  while (!post.empty()) {
+    reverse.push_back(post.front());
+    post.pop();
+  }
+  std::reverse(reverse.begin(), reverse.end());
 
-    return reverse;
+  return reverse;
 }
 
 // check that pre() and post() are consistent with pre(v) and post(v)
-bool DepthFirstOrder::check() const {
-    // check that post(v) is consistent with post()
-    int r = 0;
-    queue<int> postorder(post());
-    while (!postorder.empty()) {
-        if (post(postorder.front()) != r) {
-            printf("post(v) and post() inconsistent\n");
-            return false;
-        }
-        postorder.pop();
-        r++;
+bool DepthFirstOrder::Check() const {
+  // check that post(v) is consistent with post()
+  int r = 0;
+  queue<int> postorder(post());
+  while (!postorder.empty()) {
+    if (post(postorder.front()) != r) {
+      printf("post(v) and post() inconsistent\n");
+      return false;
     }
+    postorder.pop();
+    r++;
+  }
 
-    // check that pre(v) is consistent with pre()
-    r = 0;
-    queue<int> preorder(pre());
-    while (!preorder.empty()) {
-        if (pre(preorder.front()) != r) {
-            printf("pre(v) and pre() inconsistent\n");
-            return false;
-        }
-        preorder.pop();
-        r++;
+  // check that pre(v) is consistent with pre()
+  r = 0;
+  queue<int> preorder(pre());
+  while (!preorder.empty()) {
+    if (pre(preorder.front()) != r) {
+      printf("pre(v) and pre() inconsistent\n");
+      return false;
     }
+    preorder.pop();
+    r++;
+  }
 
-    return true;
+  return true;
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void DepthFirstOrder::validateVertex(int v) const {
-    int V = marked_.size();
-    if (v < 0 || v >= V)
-        throw std::invalid_argument("vertex " + std::to_string(v) + 
-                                    " is not between 0 and " + std::to_string(V-1));
+void DepthFirstOrder::ValidateVertex(int v) const {
+  int V = marked_.size();
+  if (v < 0 || v >= V)
+    throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                " is not between 0 and " + std::to_string(V-1));
+}
 }
 
 /**
@@ -204,44 +206,45 @@ void DepthFirstOrder::validateVertex(int v) const {
 #ifdef Debug
 #include <fstream>
 #include <iostream>
+using namespace algs4;
 int main(int argc, char *argv[]) {
-    std::fstream in(argv[1]);
-    if (!in.is_open()) {
-        std::cout << "failed to open " << argv[1] << '\n';
-        return 1;
-    }
+  std::fstream in(argv[1]);
+  if (!in.is_open()) {
+    std::cout << "failed to open " << argv[1] << '\n';
+    return 1;
+  }
 
-    Digraph G(in);
-    DepthFirstOrder dfs(G);
-    printf("   v  pre post\n");
-    printf("--------------\n");
-    for (int v = 0; v < G.V(); v++) {
-        printf("%4d %4d %4d\n", v, dfs.pre(v), dfs.post(v));
-    }
+  Digraph G(in);
+  DepthFirstOrder dfs(G);
+  printf("   v  pre post\n");
+  printf("--------------\n");
+  for (int v = 0; v < G.V(); v++) {
+    printf("%4d %4d %4d\n", v, dfs.pre(v), dfs.post(v));
+  }
 
-    printf("Preorder:  \n");
-    queue<int> preorder(dfs.pre());
-    while (!preorder.empty()) {
-        printf("%d ", preorder.front());
-        preorder.pop();
-    }
-    printf("\n");
+  printf("Preorder:  \n");
+  queue<int> preorder(dfs.pre());
+  while (!preorder.empty()) {
+    printf("%d ", preorder.front());
+    preorder.pop();
+  }
+  printf("\n");
 
-    printf("Postorder: ");
-    queue<int> postorder(dfs.post());
-    while (!postorder.empty()) {
-        printf("%d ", postorder.front());
-        postorder.pop();
-    }
-    printf("\n");
+  printf("Postorder: ");
+  queue<int> postorder(dfs.post());
+  while (!postorder.empty()) {
+    printf("%d ", postorder.front());
+    postorder.pop();
+  }
+  printf("\n");
 
-    printf("Reverse postorder: ");
-    for (int v : dfs.reversePost()) {
-        printf("%d ", v);
-    }
-    printf("\n");
+  printf("Reverse postorder: ");
+  for (int v : dfs.ReversePost()) {
+    printf("%d ", v);
+  }
+  printf("\n");
 
-    return 0;
+  return 0;
 }
 #endif
 

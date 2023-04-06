@@ -74,21 +74,22 @@
 using std::vector;
 using std::string;
 
+namespace algs4 {
 /**
  * Determines whether the digraph {@code G} has a topological order and, if so,
  * finds such a topological order.
  * @param G the digraph
  */
 Topological::Topological(const Digraph& G) noexcept {
-    DirectedCycle finder(G);
-    if (!finder.hasCycle()) {
-        DepthFirstOrder dfs(G);
-        order_ = dfs.reversePost();
-        rank_.resize(G.V());
-        int i = 0;
-        for (int v : order_)
-            rank_[v] = i++;
-    }
+  DirectedCycle finder(G);
+  if (!finder.HasCycle()) {
+    DepthFirstOrder dfs(G);
+    order_ = dfs.ReversePost();
+    rank_.resize(G.V());
+    int i = 0;
+    for (int v : order_)
+      rank_[v] = i++;
+  }
 }
 
 /**
@@ -97,11 +98,11 @@ Topological::Topological(const Digraph& G) noexcept {
  * @param G the edge-weighted digraph
  */
 Topological::Topological(const EdgeWeightedDigraph& G) noexcept {
-    EdgeWeightedDirectedCycle finder(G);
-    if (!finder.hasCycle()) {
-        DepthFirstOrder dfs(G);
-        order_ = dfs.reversePost();
-    }
+  EdgeWeightedDirectedCycle finder(G);
+  if (!finder.HasCycle()) {
+    DepthFirstOrder dfs(G);
+    order_ = dfs.ReversePost();
+  }
 }
 
 /**
@@ -114,17 +115,18 @@ Topological::Topological(const EdgeWeightedDigraph& G) noexcept {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 int Topological::rank(int v) const {
-    validateVertex(v);
-    if (hasOrder()) return rank_[v];
-    else            return -1;
+  ValidateVertex(v);
+  if (HasOrder()) return rank_[v];
+  else            return -1;
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void Topological::validateVertex(int v) const {
-    int V = rank_.size();
-    if (v < 0 || v >= V)
-        throw std::invalid_argument("vertex " + std::to_string(v) + 
-                                    " is not between 0 and " + std::to_string(V-1));
+void Topological::ValidateVertex(int v) const {
+  int V = rank_.size();
+  if (v < 0 || v >= V)
+    throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                " is not between 0 and " + std::to_string(V-1));
+}
 }
 
 /**
@@ -133,14 +135,15 @@ void Topological::validateVertex(int v) const {
  * @param args the command-line arguments
  */
 #ifdef Debug
+using namespace algs4;
 int main(int argc, char *argv[]) {
-    string filename  = argv[1];
-    string delimiter{" "};
-    if (argc > 2) delimiter = argv[2];
-    SymbolDigraph sg(argv[1], delimiter);
-    Topological topological(*sg.digraph());
-    for (int v : topological.order()) {
-        printf("%s\n", sg.nameOf(v).c_str());
-    }
+  string filename  = argv[1];
+  string delimiter{" "};
+  if (argc > 2) delimiter = argv[2];
+  SymbolDigraph sg(argv[1], delimiter);
+  Topological topological(*sg.digraph());
+  for (int v : topological.order()) {
+    printf("%s\n", sg.nameOf(v).c_str());
+  }
 }
 #endif

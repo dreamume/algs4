@@ -47,79 +47,81 @@
 using std::vector;
 using std::stack;
 
+namespace algs4 {
 /**
  * Determines whether the edge-weighted digraph {@code G} has a directed cycle and,
  * if so, finds such a cycle.
  * @param G the edge-weighted digraph
  */
 EdgeWeightedDirectedCycle::EdgeWeightedDirectedCycle(const EdgeWeightedDigraph& G) noexcept {
-    marked_.resize(G.V());
-    on_stack_.resize(G.V());
-    edge_to_.resize(G.V());
-    for (int v = 0; v < G.V(); v++)
-        if (!marked_[v]) dfs(G, v);
+  marked_.resize(G.V());
+  on_stack_.resize(G.V());
+  edge_to_.resize(G.V());
+  for (int v = 0; v < G.V(); v++)
+    if (!marked_[v]) Dfs(G, v);
 
-    // check that digraph has a cycle
-    //  assert(check());
+  // check that digraph has a cycle
+  //  assert(Check());
 }
 
 // check that algorithm computes either the topological order or finds a directed cycle
-void EdgeWeightedDirectedCycle::dfs(const EdgeWeightedDigraph& G, int v) {
-    on_stack_[v] = true;
-    marked_[v] = true;
-    for (DirectedEdge* e : G.adj(v)) {
-        int w = e->to();
+void EdgeWeightedDirectedCycle::Dfs(const EdgeWeightedDigraph& G, int v) {
+  on_stack_[v] = true;
+  marked_[v] = true;
+  for (DirectedEdge* e : G.Adj(v)) {
+    int w = e->to();
 
-        if (!cycle_.empty()) {
-		  // short circuit if directed cycle found
-		  return;
-		} else if (!marked_[w]) {
-		  // found new vertex, so recur
-            edge_to_[w] = e;
-            dfs(G, w);
-        } else if (on_stack_[w]) {
-		  // trace back directed cycle
-            DirectedEdge* f = e;
-            while (f->from() != w) {
-                cycle_.push(f);
-                f = edge_to_[f->from()];
-            }
-            cycle_.push(f);
+    if (!cycle_.empty()) {
+      // short circuit if directed cycle found
+      return;
+    } else if (!marked_[w]) {
+      // found new vertex, so recur
+      edge_to_[w] = e;
+      Dfs(G, w);
+    } else if (on_stack_[w]) {
+      // trace back directed cycle
+      DirectedEdge* f = e;
+      while (f->from() != w) {
+        cycle_.push(f);
+        f = edge_to_[f->from()];
+      }
+      cycle_.push(f);
 
-            return;
-        }
+      return;
     }
+  }
 
-    on_stack_[v] = false;
+  on_stack_[v] = false;
 }
 
 // certify that digraph is either acyclic or has a directed cycle
-bool EdgeWeightedDirectedCycle::check() const {
-    // edge-weighted digraph is cyclic
-    if (hasCycle()) {
-        // verify cycle
-        DirectedEdge* first = nullptr, *last = nullptr;
-        stack<DirectedEdge *> the_cycle(cycle());
-        while (!the_cycle.empty()) {
-            if (!first) first = the_cycle.top();
-            if (last) {
-                if (last->to() != the_cycle.top()->from()) {
-                    printf("cycle edges %s and %s not incident\n", 
-                           last->toString().c_str(), the_cycle.top()->toString().c_str());
-                    return false;
-                }
-            }
-            last = the_cycle.top();
+bool EdgeWeightedDirectedCycle::Check() const {
+  // edge-weighted digraph is cyclic
+  if (HasCycle()) {
+    // verify cycle
+    DirectedEdge* first = nullptr, *last = nullptr;
+    stack<DirectedEdge *> the_cycle(cycle());
+    while (!the_cycle.empty()) {
+      if (!first) first = the_cycle.top();
+      if (last) {
+        if (last->to() != the_cycle.top()->from()) {
+          printf("cycle edges %s and %s not incident\n", 
+                 last->ToString().c_str(), the_cycle.top()->ToString().c_str());
+          return false;
         }
-
-        if (last->to() != first->from()) {
-            printf("cycle edges %s and %s not incident\n", last->toString().c_str(),
-                   first->toString().c_str());
-            return false;
-        }
+      }
+      last = the_cycle.top();
     }
 
-    return true;
+    if (last->to() != first->from()) {
+      printf("cycle edges %s and %s not incident\n", last->ToString().c_str(),
+             first->ToString().c_str());
+      return false;
+    }
+  }
+
+  return true;
+}
 }
 
 /**
@@ -130,58 +132,58 @@ bool EdgeWeightedDirectedCycle::check() const {
 #ifdef Debug
 #include <random>
 #include <algorithm>
-
+using namespace algs4;
 int main(int argc, char *argv[]) {
-    // create random DAG with V vertices and E edges; then add F random edges
-    int V = std::stoi(argv[1]);
-    int E = std::stoi(argv[2]);
-    int F = std::stoi(argv[3]);
-    EdgeWeightedDigraph G(V);
-    vector<int> vertices(V, 0);
-    for (int i = 0; i < V; i++)
-        vertices[i] = i;
-    std::random_shuffle(vertices.begin(), vertices.end() );
+  // create random DAG with V vertices and E edges; then add F random edges
+  int V = std::stoi(argv[1]);
+  int E = std::stoi(argv[2]);
+  int F = std::stoi(argv[3]);
+  EdgeWeightedDigraph G(V);
+  vector<int> vertices(V, 0);
+  for (int i = 0; i < V; i++)
+    vertices[i] = i;
+  std::random_shuffle(vertices.begin(), vertices.end() );
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, V - 1); 
-    std::uniform_real_distribution<> dis_real(0, 1.0);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, V - 1); 
+  std::uniform_real_distribution<> dis_real(0, 1.0);
 
-    for (int i = 0; i < E; i++) {
-        int v, w;
-        do {
-            v = dis(gen);
-            w = dis(gen);
-        } while (v >= w);
-        double weight = dis_real(gen);
-        G.addEdge(new DirectedEdge(v, w, weight));
+  for (int i = 0; i < E; i++) {
+    int v, w;
+    do {
+      v = dis(gen);
+      w = dis(gen);
+    } while (v >= w);
+    double weight = dis_real(gen);
+    G.addEdge(new DirectedEdge(v, w, weight));
+  }
+
+  // add F extra edges
+  for (int i = 0; i < F; i++) {
+    int v = dis(gen);
+    int w = dis(gen);
+    double weight = dis_real(gen);
+    G.addEdge(new DirectedEdge(v, w, weight));
+  }
+
+  printf("%s\n", G.ToString().c_str());
+
+  // find a directed cycle
+  EdgeWeightedDirectedCycle finder(G);
+  if (finder.HasCycle()) {
+    printf("Cycle: ");
+    stack<DirectedEdge *> the_cycle(finder.cycle());
+    while (!the_cycle.empty()) {
+      printf("%s ", the_cycle.top()->ToString().c_str());
     }
+    printf("\n");
+  }
 
-    // add F extra edges
-    for (int i = 0; i < F; i++) {
-        int v = dis(gen);
-        int w = dis(gen);
-        double weight = dis_real(gen);
-        G.addEdge(new DirectedEdge(v, w, weight));
-    }
-
-    printf("%s\n", G.toString().c_str());
-
-    // find a directed cycle
-    EdgeWeightedDirectedCycle finder(G);
-    if (finder.hasCycle()) {
-        printf("Cycle: ");
-        stack<DirectedEdge *> the_cycle(finder.cycle());
-        while (!the_cycle.empty()) {
-            printf("%s ", the_cycle.top()->toString().c_str());
-        }
-        printf("\n");
-    }
-
-    // or give topologial sort
-    else {
-        printf("No directed cycle\n");
-    }
+  // or give topologial sort
+  else {
+    printf("No directed cycle\n");
+  }
 }
 #endif
 

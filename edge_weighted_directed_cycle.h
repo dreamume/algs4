@@ -24,52 +24,54 @@
  *  @author Kevin Wayne
  */
 
-#ifndef EDGE_WEIGHTED_DIRECTED_CYCLE_H
-#define EDGE_WEIGHTED_DIRECTED_CYCLE_H
+#ifndef EDGE_WEIGHTED_DIRECTED_CYCLE_H_
+#define EDGE_WEIGHTED_DIRECTED_CYCLE_H_
 
 #include <vector>
 #include <stack>
 
 #include "edge_weighted_digraph.h"
 
+namespace algs4 {
 class EdgeWeightedDirectedCycle {
 public:
-    /**
-     * Determines whether the edge-weighted digraph {@code G} has a directed cycle and,
-     * if so, finds such a cycle.
-     * @param G the edge-weighted digraph
-     */
-    EdgeWeightedDirectedCycle(const EdgeWeightedDigraph& G) noexcept;
-    EdgeWeightedDirectedCycle() = delete;
-    EdgeWeightedDirectedCycle(const EdgeWeightedDirectedCycle& other) = default;
-    EdgeWeightedDirectedCycle &operator=(const EdgeWeightedDirectedCycle& other) = default;
-    EdgeWeightedDirectedCycle(EdgeWeightedDirectedCycle&& other) = default;
-    EdgeWeightedDirectedCycle &operator=(EdgeWeightedDirectedCycle&& other) = default;
-    /**
-     * Does the edge-weighted digraph have a directed cycle?
-     * @return {@code true} if the edge-weighted digraph has a directed cycle,
-     * {@code false} otherwise
-     */
-    bool hasCycle() const { return !cycle_.empty(); }
-    /**
-     * Returns a directed cycle if the edge-weighted digraph has a directed cycle,
-     * and {@code null} otherwise.
-     * @return a directed cycle (as an iterable) if the edge-weighted digraph
-     *    has a directed cycle, and {@code null} otherwise
-     */
-    std::stack<DirectedEdge *> cycle() const { return cycle_; }
+  /**
+   * Determines whether the edge-weighted digraph {@code G} has a directed cycle and,
+   * if so, finds such a cycle.
+   * @param G the edge-weighted digraph
+   */
+  EdgeWeightedDirectedCycle(const EdgeWeightedDigraph& G) noexcept;
+  EdgeWeightedDirectedCycle() = delete;
+  EdgeWeightedDirectedCycle(const EdgeWeightedDirectedCycle& other) = default;
+  EdgeWeightedDirectedCycle &operator=(const EdgeWeightedDirectedCycle& other) = default;
+  EdgeWeightedDirectedCycle(EdgeWeightedDirectedCycle&& other) = default;
+  EdgeWeightedDirectedCycle &operator=(EdgeWeightedDirectedCycle&& other) = default;
+  /**
+   * Does the edge-weighted digraph have a directed cycle?
+   * @return {@code true} if the edge-weighted digraph has a directed cycle,
+   * {@code false} otherwise
+   */
+  bool HasCycle() const { return !cycle_.empty(); }
+  /**
+   * Returns a directed cycle if the edge-weighted digraph has a directed cycle,
+   * and {@code null} otherwise.
+   * @return a directed cycle (as an iterable) if the edge-weighted digraph
+   *    has a directed cycle, and {@code null} otherwise
+   */
+  std::stack<DirectedEdge *> cycle() const { return cycle_; }
 
 
 private:
-    // check that algorithm computes either the topological order or finds a directed cycle
-    void dfs(const EdgeWeightedDigraph& G, int v);
-    // certify that digraph is either acyclic or has a directed cycle
-    bool check() const;
+  // check that algorithm computes either the topological order or finds a directed cycle
+  void Dfs(const EdgeWeightedDigraph& G, int v);
+  // certify that digraph is either acyclic or has a directed cycle
+  bool Check() const;
 private:
-    std::vector<bool> marked_;             // marked[v] = has vertex v been marked?
-    std::vector<DirectedEdge *> edge_to_;        // edgeTo[v] = previous edge on path to v
-    std::vector<bool> on_stack_;            // onStack[v] = is vertex on the stack?
-    std::stack<DirectedEdge *> cycle_;    // directed cycle (or null if no such cycle)
+  std::vector<bool> marked_;             // marked[v] = has vertex v been marked?
+  std::vector<DirectedEdge *> edge_to_;        // edgeTo[v] = previous edge on path to v
+  std::vector<bool> on_stack_;            // onStack[v] = is vertex on the stack?
+  std::stack<DirectedEdge *> cycle_;    // directed cycle (or null if no such cycle)
 };
+}
 
-#endif
+#endif  // EDGE_WEIGHTED_DIRECTED_CYCLE_H_

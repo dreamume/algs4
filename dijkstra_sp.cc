@@ -1,7 +1,9 @@
 /******************************************************************************
- *  Compilation:  javac DijkstraSP.java
- *  Execution:    java DijkstraSP input.txt s
- *  Dependencies: EdgeWeightedDigraph.java IndexMinPQ.java Stack.java DirectedEdge.java
+ *  Compilation:  clang++ -c -O2 directed_edge.cc -std=c++20
+ *                clang++ -c -O2 edge_weighted_digraph.cc -std=c++20
+ *                clang++ -DDebug -O2 dijkstra_sp.cc directed_edge.o edge_weighted_digraph.o -std=c++20 -o dijkstra_sp
+ *  Execution:    ./dijkstra_sp input.txt s
+ *  Dependencies: directed_edge.cc edge_weighted_digraph.cc
  *  Data files:   https://algs4.cs.princeton.edu/44sp/tinyEWD.txt
  *                https://algs4.cs.princeton.edu/44sp/mediumEWD.txt
  *                https://algs4.cs.princeton.edu/44sp/largeEWD.txt
@@ -9,7 +11,7 @@
  *  Dijkstra's algorithm. Computes the shortest path tree.
  *  Assumes all weights are non-negative.
  *
- *  % java DijkstraSP tinyEWD.txt 0
+ *  % ./dijkstra_sp tinyEWD.txt 0
  *  0 to 0 (0.00)
  *  0 to 1 (1.05)  0->4  0.38   4->5  0.35   5->1  0.32
  *  0 to 2 (0.26)  0->2  0.26
@@ -19,7 +21,7 @@
  *  0 to 6 (1.51)  0->2  0.26   2->7  0.34   7->3  0.39   3->6  0.52
  *  0 to 7 (0.60)  0->2  0.26   2->7  0.34
  *
- *  % java DijkstraSP mediumEWD.txt 0
+ *  % ./dijkstra_sp mediumEWD.txt 0
  *  0 to 0 (0.00)
  *  0 to 1 (0.71)  0->44  0.06   44->93  0.07   ...  107->1  0.07
  *  0 to 2 (0.65)  0->44  0.06   44->231  0.10  ...  42->2  0.11

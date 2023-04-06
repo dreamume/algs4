@@ -56,6 +56,7 @@ using std::vector;
 using std::string;
 using std::fstream;
 
+namespace algs4 {
 /**
  * Initializes an empty digraph with <em>V</em> vertices.
  *
@@ -211,6 +212,7 @@ string Digraph::ToString() const {
   }
 
   return s;
+}
 }
 
 /**

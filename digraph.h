@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 
+namespace algs4 {
 class Digraph {
 public:
   friend class Digraph;
@@ -90,5 +91,6 @@ private:
   std::vector<std::vector<int>> adj_;    // adj[v] = adjacency list for vertex v
   std::vector<int> indegree_;        // indegree[v] = indegree of vertex v
 };
+}
 
 #endif  // DIGRAPH_H_

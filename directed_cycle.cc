@@ -51,65 +51,67 @@
 using std::vector;
 using std::stack;
 
+namespace algs4 {
 /**
  * Determines whether the digraph {@code G} has a directed cycle and, if so,
  * finds such a cycle.
  * @param G the digraph
  */
 DirectedCycle::DirectedCycle(const Digraph& G) noexcept {
-    marked_.resize(G.V());
-    edge_to_.resize(G.V());
-    on_stack_.resize(G.V());
-    for (int v = 0; v < G.V(); v++)
-        if (!marked_[v] && cycle_.empty()) dfs(G, v);
+  marked_.resize(G.V());
+  edge_to_.resize(G.V());
+  on_stack_.resize(G.V());
+  for (int v = 0; v < G.V(); v++)
+    if (!marked_[v] && cycle_.empty()) Dfs(G, v);
 }
 
 // check that algorithm computes either the topological order or finds a directed cycle
-void DirectedCycle::dfs(const Digraph& G, int v) {
-    on_stack_[v] = true;
-    marked_[v] = true;
-    for_each(G.adj(v).begin(), G.adj(v).end(), [&](int w) {
+void DirectedCycle::Dfs(const Digraph& G, int v) {
+  on_stack_[v] = true;
+  marked_[v] = true;
+  for_each(G.Adj(v).begin(), G.Adj(v).end(), [&](int w) {
 
-        // short circuit if directed cycle found
-        if (!cycle_.empty()) return;
+    // short circuit if directed cycle found
+    if (!cycle_.empty()) return;
 
-        // found new vertex, so recur
-        else if (!marked_[w]) {
-            edge_to_[w] = v;
-            dfs(G, w);
-        }
+    // found new vertex, so recur
+    else if (!marked_[w]) {
+      edge_to_[w] = v;
+      Dfs(G, w);
+    }
 
-        // trace back directed cycle
-        else if (on_stack_[w]) {
-            for (int x = v; x != w; x = edge_to_[x]) {
-                cycle_.push(x);
-            }
-            cycle_.push(w);
-            cycle_.push(v);
-            assert(check());
-        }
-    });
-    on_stack_[v] = false;
+    // trace back directed cycle
+    else if (on_stack_[w]) {
+      for (int x = v; x != w; x = edge_to_[x]) {
+        cycle_.push(x);
+      }
+      cycle_.push(w);
+      cycle_.push(v);
+      assert(Check());
+    }
+  });
+  on_stack_[v] = false;
 }
 
 // certify that digraph has a directed cycle if it reports one
-bool DirectedCycle::check() const {
-    if (hasCycle()) {
-        // verify cycle
-        int first = -1, last = -1;
-        stack<int> thecycle_ = cycle();
-        while (!thecycle_.empty()) {
-            if (first == -1) first = thecycle_.top();
-            last = thecycle_.top();
-            thecycle_.pop();
-        }
-        if (first != last) {
-            printf("cycle begins with %d and ends with %d\n", first, last);
-            return false;
-        }
+bool DirectedCycle::Check() const {
+  if (HasCycle()) {
+    // verify cycle
+    int first = -1, last = -1;
+    stack<int> thecycle_ = cycle();
+    while (!thecycle_.empty()) {
+      if (first == -1) first = thecycle_.top();
+      last = thecycle_.top();
+      thecycle_.pop();
     }
+    if (first != last) {
+      printf("cycle begins with %d and ends with %d\n", first, last);
+      return false;
+    }
+  }
 
-    return true;
+  return true;
+}
 }
 
 /**
@@ -120,28 +122,29 @@ bool DirectedCycle::check() const {
 #ifdef Debug
 #include <iostream>
 #include <fstream>
+using namespace algs4;
 using std::fstream;
 int main(int args, char *argv[]) {
-    fstream in(argv[1]);
-    if (!in.is_open()) {
-        std::cout << "failed to open " << argv[1] << '\n';
-        return 1;
-    }
+  fstream in(argv[1]);
+  if (!in.is_open()) {
+    std::cout << "failed to open " << argv[1] << '\n';
+    return 1;
+  }
 
-    Digraph G(in);
-    DirectedCycle finder(G);
-    if (finder.hasCycle()) {
-        printf("Directed cycle: ");
-        stack<int> thecycle_ = finder.cycle();
-        while (!thecycle_.empty()) {
-            printf("%d ", thecycle_.top());
-            thecycle_.pop();
-        }
-        printf("\n");
-    } else {
-        printf("No directed cycle\n");
+  Digraph G(in);
+  DirectedCycle finder(G);
+  if (finder.HasCycle()) {
+    printf("Directed cycle: ");
+    stack<int> thecycle_ = finder.cycle();
+    while (!thecycle_.empty()) {
+      printf("%d ", thecycle_.top());
+      thecycle_.pop();
     }
     printf("\n");
+  } else {
+    printf("No directed cycle\n");
+  }
+  printf("\n");
 }
 #endif
 

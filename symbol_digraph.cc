@@ -29,6 +29,7 @@ using std::vector;
 using std::string;
 using std::fstream;
 
+namespace algs4 {
 /**
  *  The {@code SymbolDigraph} class represents a digraph, where the
  *  vertex names are arbitrary strings.
@@ -61,65 +62,66 @@ using std::fstream;
  * @param delimiter the delimiter between fields
  */
 SymbolDigraph::SymbolDigraph(const string& filename, const string& delimiter) noexcept {
-    // First pass builds the index by reading strings to associate
-    // distinct strings with an index
-    fstream in(filename);
-    while (!in.eof()) {
-        string line;
-        std::getline(in, line);
-        if (line == "") break;
+  // First pass builds the index by reading strings to associate
+  // distinct strings with an index
+  fstream in(filename);
+  while (!in.eof()) {
+    string line;
+    std::getline(in, line);
+    if (line == "") break;
 
-        string::size_type pos = 0;
-        while (pos != string::npos) {
-            string::size_type new_pos = line.find(delimiter, pos);
-            string vertice;
-            if (new_pos != string::npos) {
-                vertice = line.substr(pos, new_pos - pos);
-                pos = new_pos + 1;
-            } else {
-                vertice = line.substr(pos);
-                pos = new_pos;
-            }
-            auto it = vertex_.find(vertice);
-            if (it == vertex_.end()) {
-                vertex_[vertice] = vertex_.size();
-                keys_.push_back(vertice);
-            }
-        }
+    string::size_type pos = 0;
+    while (pos != string::npos) {
+      string::size_type new_pos = line.find(delimiter, pos);
+      string vertice;
+      if (new_pos != string::npos) {
+        vertice = line.substr(pos, new_pos - pos);
+        pos = new_pos + 1;
+      } else {
+        vertice = line.substr(pos);
+        pos = new_pos;
+      }
+      auto it = vertex_.find(vertice);
+      if (it == vertex_.end()) {
+        vertex_[vertice] = vertex_.size();
+        keys_.push_back(vertice);
+      }
     }
+  }
 
-    // second pass builds the digraph by connecting first vertex on each
-    // line to all others
-    graph_ = new Digraph(vertex_.size());
-    fstream in2(filename);
-    while (!in2.eof()) {
-        string line;
-        std::getline(in2, line);
+  // second pass builds the digraph by connecting first vertex on each
+  // line to all others
+  graph_ = new Digraph(vertex_.size());
+  fstream in2(filename);
+  while (!in2.eof()) {
+    string line;
+    std::getline(in2, line);
 
-        string::size_type pos = line.find(delimiter);
-        if (pos == string::npos) continue;
-        int v = vertex_[line.substr(0, pos)];
-        ++pos;
-        while (true) {
-            string::size_type new_pos = line.find(delimiter, pos);
-            if (new_pos != string::npos) {
-                graph_->addEdge(v, vertex_[line.substr(pos, new_pos - pos)]);
-                pos = new_pos + 1;
-            } else {
-                string w = line.substr(pos);
-                graph_->addEdge(v, vertex_[line.substr(pos)]);
-                break;
-            }
-        }
+    string::size_type pos = line.find(delimiter);
+    if (pos == string::npos) continue;
+    int v = vertex_[line.substr(0, pos)];
+    ++pos;
+    while (true) {
+      string::size_type new_pos = line.find(delimiter, pos);
+      if (new_pos != string::npos) {
+        graph_->AddEdge(v, vertex_[line.substr(pos, new_pos - pos)]);
+        pos = new_pos + 1;
+      } else {
+        string w = line.substr(pos);
+        graph_->AddEdge(v, vertex_[line.substr(pos)]);
+        break;
+      }
     }
+  }
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void SymbolDigraph::validateVertex(int v) const {
-    int V = graph_->V();
-    if (v < 0 || v >= V)
-        throw std::invalid_argument("vertex " + std::to_string(v) + 
-                                    " is not between 0 and " + std::to_string(V-1));
+void SymbolDigraph::ValidateVertex(int v) const {
+  int V = graph_->V();
+  if (v < 0 || v >= V)
+    throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                " is not between 0 and " + std::to_string(V-1));
+}
 }
 
 /**
@@ -131,17 +133,18 @@ void SymbolDigraph::validateVertex(int v) const {
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
+using namespace algs4;
 int main(int argc, char *argv[]) {
-    string delimiter{" "};
-    if (argc > 2) delimiter = argv[2];
-    SymbolDigraph sg(argv[1], delimiter);
-    Digraph* graph = sg.digraph();
-    string t;
-    auto print = [&](const int& n) { std::cout << "    " << sg.name(n) << std::endl; };
-    while (std::cin >> t) {
-        vector<int> array = graph->adj(sg.index(t));
-        std::for_each(array.cbegin(), array.cend(), print);
-    }
+  string delimiter{" "};
+  if (argc > 2) delimiter = argv[2];
+  SymbolDigraph sg(argv[1], delimiter);
+  Digraph* graph = sg.digraph();
+  string t;
+  auto print = [&](const int& n) { std::cout << "    " << sg.Name(n) << std::endl; };
+  while (std::cin >> t) {
+    vector<int> array = graph->adj(sg.Index(t));
+    std::for_each(array.cbegin(), array.cend(), print);
+  }
 }
 #endif
 
