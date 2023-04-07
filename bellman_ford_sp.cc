@@ -77,55 +77,56 @@ using std::vector;
 using std::queue;
 using std::stack;
 
+namespace algs4 {
 BellmanFordSP::BellmanFordSP(const EdgeWeightedDigraph& G, int s) {
-  _distTo.resize(G.V());
-  _edgeTo.resize(G.V());
-  _onQueue.resize(G.V());
+  dist_to_.resize(G.V());
+  edge_to_.resize(G.V());
+  on_queue_.resize(G.V());
   for (int v = 0; v < G.V(); v++)
-	_distTo[v] = std::numeric_limits<double>::max();
-  _distTo[s] = 0.0;
+	dist_to_[v] = std::numeric_limits<double>::max();
+  dist_to_[s] = 0.0;
 
   // Bellman-Ford algorithm
-  _queue.push(s);
-  _onQueue[s] = true;
-  while (!_queue.empty() && !hasNegativeCycle()) {
-	int v = _queue.front();
-	_queue.pop();
-	_onQueue[v] = false;
-	relax(G, v);
+  queue_.push(s);
+  on_queue_[s] = true;
+  while (!queue_.empty() && !HasNegativeCycle()) {
+	int v = queue_.front();
+	queue_.pop();
+	on_queue_[v] = false;
+	Relax(G, v);
   }
 
-  assert(check(G, s));
+  assert(Check(G, s));
 }
 
 // relax vertex v and put other endpoints on queue if changed
-void BellmanFordSP::relax(const EdgeWeightedDigraph& G, int v) {
-  for (DirectedEdge* e : G.adj(v)) {
+void BellmanFordSP::Relax(const EdgeWeightedDigraph& G, int v) {
+  for (DirectedEdge* e : G.Adj(v)) {
 	int w = e->to();
-	if (_distTo[w] > _distTo[v] + e->weight()) {
-	  _distTo[w] = _distTo[v] + e->weight();
-	  _edgeTo[w] = e;
-	  if (!_onQueue[w]) {
-		_queue.push(w);
-		_onQueue[w] = true;
+	if (dist_to_[w] > dist_to_[v] + e->weight()) {
+	  dist_to_[w] = dist_to_[v] + e->weight();
+	  edge_to_[w] = e;
+	  if (!on_queue_[w]) {
+		queue_.push(w);
+		on_queue_[w] = true;
 	  }
 	}
-	if (_cost++ % G.V() == 0) {
-	  findNegativeCycle();
-	  if (hasNegativeCycle()) return;  // found a negative cycle
+	if (cost_++ % G.V() == 0) {
+	  FindNegativeCycle();
+	  if (HasNegativeCycle()) return;  // found a negative cycle
 	}
   }
 }
 
   // by finding a cycle in predecessor graph
-void BellmanFordSP::findNegativeCycle() {
-  int V = _edgeTo.size();
+void BellmanFordSP::FindNegativeCycle() {
+  int V = edge_to_.size();
   EdgeWeightedDigraph spt(V);
   for (int v = 0; v < V; v++)
-	if (_edgeTo[v] != nullptr) spt.addEdge(_edgeTo[v]);
+	if (edge_to_[v] != nullptr) spt.AddEdge(edge_to_[v]);
 
   EdgeWeightedDirectedCycle finder(spt);
-  _cycle = finder.cycle();
+  cycle_ = finder.cycle();
 }
 
 /**
@@ -138,10 +139,10 @@ void BellmanFordSP::findNegativeCycle() {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 double BellmanFordSP::distTo(int v) const {
-  validateVertex(v);
-  if (hasNegativeCycle())
+  ValidateVertex(v);
+  if (HasNegativeCycle())
 	throw "Negative cost cycle exists";
-  return _distTo[v];
+  return dist_to_[v];
 }
 
 /**
@@ -153,13 +154,13 @@ double BellmanFordSP::distTo(int v) const {
  *         from the source vertex {@code s}
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
-vector<DirectedEdge *> BellmanFordSP::pathTo(int v) const {
-  validateVertex(v);
-  if (hasNegativeCycle())
+vector<DirectedEdge *> BellmanFordSP::PathTo(int v) const {
+  ValidateVertex(v);
+  if (HasNegativeCycle())
 	throw "Negative cost cycle exists";
-  if (!hasPathTo(v)) return {};
+  if (!HasPathTo(v)) return {};
   vector<DirectedEdge *> path;
-  for (DirectedEdge* e = _edgeTo[v]; e != nullptr; e = _edgeTo[e->from()])
+  for (DirectedEdge* e = edge_to_[v]; e != nullptr; e = edge_to_[e->from()])
 	path.push_back(e);
   std::reverse(path.begin(), path.end());
 
@@ -171,11 +172,11 @@ vector<DirectedEdge *> BellmanFordSP::pathTo(int v) const {
 //     or 
 // (ii)  for all edges e = v->w:            distTo[w] <= distTo[v] + e.weight()
 // (ii') for all edges e = v->w on the SPT: distTo[w] == distTo[v] + e.weight()
-bool BellmanFordSP::check(const EdgeWeightedDigraph& G, int s) {
+bool BellmanFordSP::Check(const EdgeWeightedDigraph& G, int s) {
   // has a negative cycle
-  if (hasNegativeCycle()) {
+  if (HasNegativeCycle()) {
 	double weight = 0.0;
-	stack<DirectedEdge *> edges(negativeCycle());
+	stack<DirectedEdge *> edges(NegativeCycle());
 	while (!edges.empty()) {
 	  weight += edges.top()->weight();
 	  edges.pop();
@@ -186,13 +187,13 @@ bool BellmanFordSP::check(const EdgeWeightedDigraph& G, int s) {
 	}
   } else { // no negative cycle reachable from source
 	// check that distTo[v] and edgeTo[v] are consistent
-	if (_distTo[s] != 0.0 || _edgeTo[s] != nullptr) {
+	if (dist_to_[s] != 0.0 || edge_to_[s] != nullptr) {
 	  printf("distanceTo[s] and edgeTo[s] inconsistent\n");
 	  return false;
 	}
 	for (int v = 0; v < G.V(); v++) {
 	  if (v == s) continue;
-	  if (_edgeTo[v] == nullptr && _distTo[v] != std::numeric_limits<double>::max()) {
+	  if (edge_to_[v] == nullptr && dist_to_[v] != std::numeric_limits<double>::max()) {
 		printf("distTo[] and edgeTo[] inconsistent\n");
 		return false;
 	  }
@@ -200,10 +201,10 @@ bool BellmanFordSP::check(const EdgeWeightedDigraph& G, int s) {
 
 	// check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
 	for (int v = 0; v < G.V(); v++) {
-	  for (DirectedEdge* e : G.adj(v)) {
+	  for (DirectedEdge* e : G.Adj(v)) {
 		int w = e->to();
-		if (_distTo[v] + e->weight() < _distTo[w]) {
-		  printf("edge %s not relaxed\n", e->toString().c_str());
+		if (dist_to_[v] + e->weight() < dist_to_[w]) {
+		  printf("edge %s not relaxed\n", e->ToString().c_str());
 		  return false;
 		}
 	  }
@@ -211,12 +212,12 @@ bool BellmanFordSP::check(const EdgeWeightedDigraph& G, int s) {
 
 	// check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
 	for (int w = 0; w < G.V(); w++) {
-	  if (_edgeTo[w] == nullptr) continue;
-	  DirectedEdge* e = _edgeTo[w];
+	  if (edge_to_[w] == nullptr) continue;
+	  DirectedEdge* e = edge_to_[w];
 	  int v = e->from();
 	  if (w != e->to()) return false;
-	  if (_distTo[v] + e->weight() != _distTo[w]) {
-		printf("edge %s on shortest path not tight\n", e->toString().c_str());
+	  if (dist_to_[v] + e->weight() != dist_to_[w]) {
+		printf("edge %s on shortest path not tight\n", e->ToString().c_str());
 		return false;
 	  }
 	}
@@ -227,10 +228,11 @@ bool BellmanFordSP::check(const EdgeWeightedDigraph& G, int s) {
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void BellmanFordSP::validateVertex(int v) const {
-  int V = _distTo.size();
+void BellmanFordSP::ValidateVertex(int v) const {
+  int V = dist_to_.size();
   if (v < 0 || v >= V)
 	throw std::invalid_argument("vertex " + std::to_string(v) + " is not between 0 and " + std::to_string(V-1));
+}
 }
 
 /**
@@ -242,6 +244,7 @@ void BellmanFordSP::validateVertex(int v) const {
 
 #include <fstream>
 
+using namespace algs4;
 using std::fstream;
 
 int main(int args, char *argv[]) {
@@ -252,18 +255,18 @@ int main(int args, char *argv[]) {
   BellmanFordSP sp(G, s);
 
   // print negative cycle
-  if (sp.hasNegativeCycle()) {
-	stack<DirectedEdge *> edges(sp.negativeCycle());
+  if (sp.HasNegativeCycle()) {
+	stack<DirectedEdge *> edges(sp.NegativeCycle());
 	while (!edges.empty()) {
-	  printf("%s\n", edges.top()->toString().c_str());
+	  printf("%s\n", edges.top()->ToString().c_str());
 	  edges.pop();
 	}
   } else { // print shortest paths
 	for (int v = 0; v < G.V(); v++) {
-	  if (sp.hasPathTo(v)) {
+	  if (sp.HasPathTo(v)) {
 		printf("%d to %d (%5.2f)  ", s, v, sp.distTo(v));
-		for (DirectedEdge* e : sp.pathTo(v)) {
-		  printf("%s   ", e->toString().c_str());
+		for (DirectedEdge* e : sp.PathTo(v)) {
+		  printf("%s   ", e->ToString().c_str());
 		}
 		printf("\n");
 	  } else {

@@ -36,6 +36,7 @@
 using std::vector;
 using std::string;
 
+namespace algs4 {
 /**
  * Computes a longest paths tree from {@code s} to every other vertex in
  * the directed acyclic graph {@code G}.
@@ -44,33 +45,55 @@ using std::string;
  * @throws IllegalArgumentException if the digraph is not acyclic
  * @throws IllegalArgumentException unless {@code 0 <= s < V}
  */
-AcyclicLP::AcyclicLP(const EdgeWeightedDigraph& G, int s) {
-  _distTo.resize(G.V());
-  _edgeTo.resize(G.V());
-
-  validateVertex(s);
+AcyclicLP::AcyclicLP(const EdgeWeightedDigraph& G, int s) : 
+  dist_to_(G.V()), edge_to_(G.V()) {
+  ValidateVertex(s);
 
   for (int v = 0; v < G.V(); v++)
-	_distTo[v] = std::numeric_limits<double>::min();
-  _distTo[s] = 0.0;
+	dist_to_[v] = std::numeric_limits<double>::min();
+  dist_to_[s] = 0.0;
 
   // relax vertices in topological order
   Topological topological(G);
-  if (!topological.hasOrder())
+  if (!topological.HasOrder())
 	throw std::invalid_argument("Digraph is not acyclic.");
   for (int v : topological.order()) {
-	for (DirectedEdge* e : G.adj(v))
-	  relax(*e);
+	for (DirectedEdge* e : G.Adj(v))
+	  Relax(*e);
   }
 }
 
 // relax edge e, but update if you find a *longer* path
-void AcyclicLP::relax(const DirectedEdge& e) {
+void AcyclicLP::Relax(const DirectedEdge& e) {
   int v = e.from(), w = e.to();
-  if (_distTo[w] < _distTo[v] + e.weight()) {
-	_distTo[w] = _distTo[v] + e.weight();
-	_edgeTo[w] = const_cast<DirectedEdge *>(&e);
+  if (dist_to_[w] < dist_to_[v] + e.weight()) {
+	dist_to_[w] = dist_to_[v] + e.weight();
+	edge_to_[w] = const_cast<DirectedEdge *>(&e);
   }       
+}
+
+vector<DirectedEdge *> AcyclicLP::PathTo(int v) {
+  ValidateVertex(v);
+  if (!HasPathTo(v)) return {};
+  std::stack<DirectedEdge *> path;
+  for (DirectedEdge* e = edge_to_[v]; e != nullptr; e = edge_to_[e->from()]) {
+    path.push(e);
+  }
+  std::vector<DirectedEdge *> res;
+  while (!path.empty()) {
+    res.push_back(path.top());
+    path.pop();
+  }
+
+  return res;
+}
+
+void AcyclicLP::ValidateVertex(int v) const {
+  int V = dist_to_.size();
+  if (v < 0 || v >= V)
+    throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                " is not between 0 and " + std::to_string(V-1));
+}
 }
 
 /**
@@ -81,6 +104,7 @@ void AcyclicLP::relax(const DirectedEdge& e) {
 #ifdef Debug
 #include <fstream>
 #include <cstdio>
+using namespace algs4;
 using std::fstream;
 int main(int args, char *argv[]) {
   int s = std::stoi(argv[2]);
@@ -90,10 +114,10 @@ int main(int args, char *argv[]) {
   AcyclicLP lp(G, s);
 
   for (int v = 0; v < G.V(); v++) {
-	if (lp.hasPathTo(v)) {
+	if (lp.HasPathTo(v)) {
 	  printf("%d to %d (%.2f)  ", s, v, lp.distTo(v));
-	  for (DirectedEdge* e : lp.pathTo(v)) {
-		printf("%s   ", e->toString().c_str());
+	  for (DirectedEdge* e : lp.PathTo(v)) {
+		printf("%s   ", e->ToString().c_str());
 	  }
 	  printf("\n");
 	}

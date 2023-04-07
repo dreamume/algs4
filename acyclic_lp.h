@@ -18,8 +18,8 @@
  *  @author Kevin Wayne
  */
 
-#ifndef ACYCLIC_LP_H
-#define ACYCLIC_LP_H
+#ifndef ACYCLIC_LP_H_
+#define ACYCLIC_LP_H_
 
 #include <vector>
 #include <limits>
@@ -30,6 +30,7 @@
 #include "edge_weighted_digraph.h"
 #include "directed_edge.h"
 
+namespace algs4 {
 class AcyclicLP {
  public:
   /**
@@ -41,6 +42,11 @@ class AcyclicLP {
    * @throws IllegalArgumentException unless {@code 0 <= s < V}
    */
   AcyclicLP(const EdgeWeightedDigraph& G, int s);
+  AcyclicLP() = delete;
+  AcyclicLP(const AcyclicLP& other) = delete;
+  AcyclicLP &operator=(const AcyclicLP& other) = delete;
+  AcyclicLP(AcyclicLP&& other) = default;
+  AcyclicLP &operator=(AcyclicLP&& other) = default;
   /**
    * Returns the length of a longest path from the source vertex {@code s} to vertex {@code v}.
    * @param  v the destination vertex
@@ -49,8 +55,8 @@ class AcyclicLP {
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
   double distTo(int v) const {
-	validateVertex(v);
-	return _distTo[v];
+	ValidateVertex(v);
+	return dist_to_[v];
   }
   /**
    * Is there a path from the source vertex {@code s} to vertex {@code v}?
@@ -59,9 +65,9 @@ class AcyclicLP {
    *         {@code s} to vertex {@code v}, and {@code false} otherwise
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  bool hasPathTo(int v) const {
-	validateVertex(v);
-	return _distTo[v] > std::numeric_limits<double>::min();
+  bool HasPathTo(int v) const {
+	ValidateVertex(v);
+	return dist_to_[v] > std::numeric_limits<double>::min();
   }
   /**
    * Returns a longest path from the source vertex {@code s} to vertex {@code v}.
@@ -70,36 +76,18 @@ class AcyclicLP {
    *         as an iterable of edges, and {@code null} if no such path
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  std::vector<DirectedEdge *> pathTo(int v) {
-	validateVertex(v);
-	if (!hasPathTo(v)) return {};
-	std::stack<DirectedEdge *> path;
-	for (DirectedEdge* e = _edgeTo[v]; e != nullptr; e = _edgeTo[e->from()]) {
-	  path.push(e);
-	}
-	std::vector<DirectedEdge *> res;
-	while (!path.empty()) {
-	  res.push_back(path.top());
-	  path.pop();
-	}
-
-	return res;
-  }
+  std::vector<DirectedEdge *> PathTo(int v);
 
  private:
   // relax edge e, but update if you find a *longer* path
-  void relax(const DirectedEdge& e);
+  void Relax(const DirectedEdge& e);
   // throw an IllegalArgumentException unless {@code 0 <= v < V}
-  void validateVertex(int v) const {
-	int V = _distTo.size();
-	if (v < 0 || v >= V)
-	  throw std::invalid_argument("vertex " + std::to_string(v) + 
-								  " is not between 0 and " + std::to_string(V-1));
-  }
+  void ValidateVertex(int v) const;
 
  private:
-  std::vector<double> _distTo;          // distTo[v] = distance  of longest s->v path
-  std::vector<DirectedEdge *> _edgeTo;    // edgeTo[v] = last edge on longest s->v path
+  std::vector<double> dist_to_;          // distTo[v] = distance  of longest s->v path
+  std::vector<DirectedEdge *> edge_to_;    // edgeTo[v] = last edge on longest s->v path
 };
+}
 
-#endif
+#endif  // ACYCLIC_LP_H_

@@ -23,8 +23,8 @@
  *  @author Kevin Wayne
  */
 
-#ifndef BELLMAN_FORD_SP_H
-#define BELLMAN_FORD_SP_H
+#ifndef BELLMAN_FORD_SP_H_
+#define BELLMAN_FORD_SP_H_
 
 #include <vector>
 #include <queue>
@@ -32,6 +32,8 @@
 #include <limits>
 
 #include "edge_weighted_digraph.h"
+
+namespace algs4 {
 
 class DirectedEdge;
 
@@ -45,19 +47,24 @@ class BellmanFordSP {
    * @throws IllegalArgumentException unless {@code 0 <= s < V}
    */
   BellmanFordSP(const EdgeWeightedDigraph& G, int s);
+  BellmanFordSP() = delete;
+  BellmanFordSP(const BellmanFordSP& other) = delete;
+  BellmanFordSP &operator=(const BellmanFordSP& other) = delete;
+  BellmanFordSP(BellmanFordSP&& other) = default;
+  BellmanFordSP &operator=(BellmanFordSP&& other) = default;
   /**
    * Is there a negative cycle reachable from the source vertex {@code s}?
    * @return {@code true} if there is a negative cycle reachable from the
    *    source vertex {@code s}, and {@code false} otherwise
    */
-  bool hasNegativeCycle() const { return !_cycle.empty(); }
+  bool HasNegativeCycle() const { return !cycle_.empty(); }
   /**
    * Returns a negative cycle reachable from the source vertex {@code s}, or {@code null}
    * if there is no such cycle.
    * @return a negative cycle reachable from the soruce vertex {@code s} 
    *    as an iterable of edges, and {@code null} if there is no such cycle
    */
-  std::stack<DirectedEdge *> negativeCycle() const { return _cycle; }
+  std::stack<DirectedEdge *> NegativeCycle() const { return cycle_; }
   /**
    * Returns the length of a shortest path from the source vertex {@code s} to vertex {@code v}.
    * @param  v the destination vertex
@@ -75,9 +82,9 @@ class BellmanFordSP {
    *         {@code s} to vertex {@code v}, and {@code false} otherwise
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  bool hasPathTo(int v) const { 
-	validateVertex(v); 
-	return _distTo[v] < std::numeric_limits<double>::max(); 
+  bool HasPathTo(int v) const { 
+	ValidateVertex(v); 
+	return dist_to_[v] < std::numeric_limits<double>::max(); 
   }
   /**
    * Returns a shortest path from the source {@code s} to vertex {@code v}.
@@ -88,29 +95,30 @@ class BellmanFordSP {
    *         from the source vertex {@code s}
    * @throws IllegalArgumentException unless {@code 0 <= v < V}
    */
-  std::vector<DirectedEdge *> pathTo(int v) const;
+  std::vector<DirectedEdge *> PathTo(int v) const;
 
  private:
   // relax vertex v and put other endpoints on queue if changed
-  void relax(const EdgeWeightedDigraph& G, int v);
+  void Relax(const EdgeWeightedDigraph& G, int v);
   // by finding a cycle in predecessor graph
-  void findNegativeCycle();
+  void FindNegativeCycle();
   // check optimality conditions: either 
   // (i) there exists a negative cycle reacheable from s
   //     or 
   // (ii)  for all edges e = v->w:            distTo[w] <= distTo[v] + e.weight()
   // (ii') for all edges e = v->w on the SPT: distTo[w] == distTo[v] + e.weight()
-  bool check(const EdgeWeightedDigraph& G, int s);
+  bool Check(const EdgeWeightedDigraph& G, int s);
   // throw an IllegalArgumentException unless {@code 0 <= v < V}
-  void validateVertex(int v) const;
+  void ValidateVertex(int v) const;
 
  private:
-  std::vector<double> _distTo;               // distTo[v] = distance  of shortest s->v path
-  std::vector<DirectedEdge *> _edgeTo;         // edgeTo[v] = last edge on shortest s->v path
-  std::vector<bool> _onQueue;             // onQueue[v] = is v currently on the queue?
-  std::queue<int> _queue;          // queue of vertices to relax
-  int _cost;                      // number of calls to relax()
-  std::stack<DirectedEdge *> _cycle;  // negative cycle (or null if no such cycle)
+  std::vector<double> dist_to_;               // distTo[v] = distance  of shortest s->v path
+  std::vector<DirectedEdge *> edge_to_;         // edgeTo[v] = last edge on shortest s->v path
+  std::vector<bool> on_queue_;             // onQueue[v] = is v currently on the queue?
+  std::queue<int> queue_;          // queue of vertices to relax
+  int cost_;                      // number of calls to relax()
+  std::stack<DirectedEdge *> cycle_;  // negative cycle (or null if no such cycle)
 };
+}
 
-#endif
+#endif  // BELLMAN_FORD_SP_H_
