@@ -72,6 +72,7 @@
 #include "acyclic_lp.h"
 
 using namespace std;
+using namespace algs4;
 
 int main(int args, char* argv[]) {
   fstream in(argv[1]);

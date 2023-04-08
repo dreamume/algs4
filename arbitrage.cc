@@ -70,6 +70,7 @@ using std::string;
 using std::vector;
 using std::stack;
 using std::fstream;
+using namespace algs4;
 
 int main(int argc, char *argv[]) {
   // V currencies

@@ -70,6 +70,7 @@ using std::vector;
 using std::string;
 using std::fstream;
 
+namespace algs4 {
 /**  
  * Initializes a graph from the specified input stream.
  * The format is the number of vertices <em>V</em>,
@@ -82,33 +83,33 @@ using std::fstream;
  * @throws IllegalArgumentException if the input stream is in the wrong format
  */
 Graph::Graph(fstream& in) {
-    try {
-        string line;
-        std::getline(in, line);
-        v_ = stoi(line);
+  try {
+    string line;
+    std::getline(in, line);
+    v_ = stoi(line);
 
-        if (v_ < 0) 
-            throw std::invalid_argument("number of vertices in a Graph must be nonnegative");
-        adj_.resize(v_);
-        std::getline(in, line);
-        int E = stoi(line);
-        if (E < 0) 
-            throw std::invalid_argument("number of edges in a Graph must be nonnegative");
-        for (int i = 0; i < E; i++) {
-            std::getline(in, line);
-            const char* str = line.c_str();
-            char *end;
-            int v = std::strtol(str, &end, 10);
-            str = end;
-            int w = std::strtol(str, &end, 10);
-            validateVertex(v);
-            validateVertex(w);
-            addEdge(v, w); 
-        }
+    if (v_ < 0) 
+      throw std::invalid_argument("number of vertices in a Graph must be nonnegative");
+    adj_.resize(v_);
+    std::getline(in, line);
+    int E = stoi(line);
+    if (E < 0) 
+      throw std::invalid_argument("number of edges in a Graph must be nonnegative");
+    for (int i = 0; i < E; i++) {
+      std::getline(in, line);
+      const char* str = line.c_str();
+      char *end;
+      int v = std::strtol(str, &end, 10);
+      str = end;
+      int w = std::strtol(str, &end, 10);
+      ValidateVertex(v);
+      ValidateVertex(w);
+      AddEdge(v, w); 
     }
-    catch (...) {
-        throw;
-    }
+  }
+  catch (...) {
+    throw;
+  }
 }
 
 
@@ -118,15 +119,15 @@ Graph::Graph(fstream& in) {
  * @param  G the graph to copy
  */
 Graph::Graph(const Graph& G) noexcept : Graph(G.V()) {
-    e_ = G.E();
-    for (int i = 0; i < v_; ++i) adj_[i] = G.adj(i);
+  e_ = G.E();
+  for (int i = 0; i < v_; ++i) adj_[i] = G.adj(i);
 }
 
 // throw an IllegalArgumentException unless {@code 0 <= v < V}
-void Graph::validateVertex(int v) const {
-    if (v < 0 || v >= v_)
-        throw std::invalid_argument("vertex " + std::to_string(v) + 
-                                    " is not between 0 and " + std::to_string(v_-1));
+void Graph::ValidateVertex(int v) const {
+  if (v < 0 || v >= v_)
+    throw std::invalid_argument("vertex " + std::to_string(v) + 
+                                " is not between 0 and " + std::to_string(v_-1));
 }
 
 /**
@@ -136,12 +137,12 @@ void Graph::validateVertex(int v) const {
  * @param  w the other vertex in the edge
  * @throws IllegalArgumentException unless both {@code 0 <= v < V} and {@code 0 <= w < V}
  */
-void Graph::addEdge(int v, int w) {
-    validateVertex(v);
-    validateVertex(w);
-    e_++;
-    adj_[v].push_back(w);
-    adj_[w].push_back(v);
+void Graph::AddEdge(int v, int w) {
+  ValidateVertex(v);
+  ValidateVertex(w);
+  e_++;
+  adj_[v].push_back(w);
+  adj_[w].push_back(v);
 }
 
 /**
@@ -152,8 +153,8 @@ void Graph::addEdge(int v, int w) {
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
 const vector<int>& Graph::adj(int v) const {
-    validateVertex(v);
-    return adj_[v];
+  ValidateVertex(v);
+  return adj_[v];
 }
 
 /**
@@ -163,9 +164,9 @@ const vector<int>& Graph::adj(int v) const {
  * @return the degree of vertex {@code v}
  * @throws IllegalArgumentException unless {@code 0 <= v < V}
  */
-int Graph::degree(int v) const {
-    validateVertex(v);
-    return adj_[v].size();
+int Graph::Degree(int v) const {
+  ValidateVertex(v);
+  return adj_[v].size();
 }
 
 /**
@@ -174,15 +175,16 @@ int Graph::degree(int v) const {
  * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
  *         followed by the <em>V</em> adjacency lists
  */
-string Graph::toString() const {
-    string s(std::to_string(v_) + " vertices, " + std::to_string(e_) + " edges \n");
-    for (int v = 0; v < v_; v++) {
-        s += std::to_string(v) + ": ";
-        for (int w : adj_[v]) s += std::to_string(w) + " ";
-        s += "\n";
-    }
+string Graph::ToString() const {
+  string s(std::to_string(v_) + " vertices, " + std::to_string(e_) + " edges \n");
+  for (int v = 0; v < v_; v++) {
+    s += std::to_string(v) + ": ";
+    for (int w : adj_[v]) s += std::to_string(w) + " ";
+    s += "\n";
+  }
 
-    return s;
+  return s;
+}
 }
 
 /**
@@ -191,16 +193,17 @@ string Graph::toString() const {
  * @param args the command-line arguments
  */
 #ifdef Debug
+using namespace algs4;
 int main(int args, char* argv[]) {
-    fstream in(argv[1]);
-    if (!in.is_open()) {
-        std::cout << "failed to open " << argv[1] << '\n';
-        return 1;
-    }
+  fstream in(argv[1]);
+  if (!in.is_open()) {
+    std::cout << "failed to open " << argv[1] << '\n';
+    return 1;
+  }
 
-    Graph G(in);
-    printf("%s\n", G.toString().c_str());
+  Graph G(in);
+  printf("%s\n", G.ToString().c_str());
 
-    return 0;
+  return 0;
 }
 #endif
