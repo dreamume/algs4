@@ -46,6 +46,7 @@
 
 using std::vector;
 
+namespace algs4 {
 DirectedDFS::DirectedDFS(const Digraph& G, int s) noexcept : marked_(G.V()) {
   Dfs(G, s);
 }
@@ -81,6 +82,7 @@ void DirectedDFS::ValidateVertices(const vector<int>& vertices) const {
   }
   if (vertexCount == 0)
     throw std::invalid_argument("zero vertices");
+}
 }
 
 #ifdef Debug

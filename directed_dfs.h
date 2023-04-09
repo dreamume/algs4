@@ -5,6 +5,7 @@
 
 #include <vector>
 
+namespace algs4 {
 class DirectedDFS {
 public:
   /**
@@ -68,5 +69,6 @@ private:
   std::vector<bool> marked_;  // marked_[v] = true iff v is reachable from source(s)
   int count_{0};         // number of vertices reachable from source(s)
 };
+}
 
 #endif  // DIRECTED_DFS_
